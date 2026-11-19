@@ -3,9 +3,14 @@
 // al recargar la página.
 //
 // Uso: const [valor, setValor] = useLocalStorage('butaka:clave', valorInicial);
+// setValor acepta un valor o una función (anterior) => nuevo, igual que useState.
 // Todas las claves empiezan con "butaka:" (ver el mapa en CONTRIBUIR.md).
+//
+// El valor se escribe en localStorage en el mismo momento en que se cambia
+// (no en un efecto), para que no se pierda si la pantalla navega a otra
+// vista justo después de guardar.
 
-import { useEffect, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 function leer(clave, valorInicial) {
   try {
@@ -17,17 +22,29 @@ function leer(clave, valorInicial) {
   }
 }
 
+function escribir(clave, valor) {
+  try {
+    localStorage.setItem(clave, JSON.stringify(valor));
+  } catch {
+    // Almacenamiento lleno o bloqueado: la app sigue funcionando sin guardar
+  }
+}
+
 export function useLocalStorage(clave, valorInicial) {
   // Inicialización perezosa: localStorage se lee una sola vez
-  const [valor, setValor] = useState(() => leer(clave, valorInicial));
+  const [valor, setValorEstado] = useState(() => leer(clave, valorInicial));
+  // Copia del valor más reciente, para calcular el siguiente sin esperar un render
+  const actual = useRef(valor);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(clave, JSON.stringify(valor));
-    } catch {
-      // Almacenamiento lleno o bloqueado: la app sigue funcionando sin guardar
-    }
-  }, [clave, valor]);
+  const setValor = useCallback(
+    (nuevo) => {
+      const siguiente = typeof nuevo === 'function' ? nuevo(actual.current) : nuevo;
+      actual.current = siguiente;
+      escribir(clave, siguiente);
+      setValorEstado(siguiente);
+    },
+    [clave],
+  );
 
   return [valor, setValor];
 }

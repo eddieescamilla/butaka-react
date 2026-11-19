@@ -108,7 +108,11 @@ Cada clave tiene un solo dueño. Todas empiezan con `butaka:`.
 | `butaka:preferencias` | Eddie | Último filtro de categoría y orden del listado |
 | `butaka:admin-*` | Eddie | Cambios hechos desde el panel (eventos y usuarios creados o eliminados) |
 
-Para guardar algo nuevo, usa `useLocalStorage('butaka:tu-clave', valorInicial)`.
+Para guardar algo nuevo, usa `useLocalStorage('butaka:tu-clave', valorInicial)`. El valor se escribe en el momento, así que puedes llamar a `irA(...)` justo después de guardar sin perder nada.
+
+Datos que cambia el panel de administración y que el resto de la app puede leer:
+- **Eventos:** `src/servicios/eventos.js` ya usa `butaka:admin-eventos`. Si pides los eventos con `obtenerEventos` u `obtenerEventoPorId`, ves los cambios del panel automáticamente.
+- **Usuarios:** si el login usa `listaUsuarios()` de `src/servicios/usuarios.js` en lugar de `USUARIOS`, también reconoce los usuarios creados o desactivados desde el panel.
 
 ## 5. Estilos
 
@@ -121,24 +125,40 @@ Para guardar algo nuevo, usa `useLocalStorage('butaka:tu-clave', valorInicial)`.
   - escritorio: `@media (min-width: 1024px)`, se revisa a **1440 px**.
 - Nada puede provocar scroll horizontal. Las tablas anchas van dentro de un contenedor con `overflow-x: auto`.
 
-## 6. Git: el flujo de cada día
+## 6. Git: una rama por módulo y pull request
+
+Nadie trabaja directo en `main`. Cada módulo va en su propia rama y entra a `main` con un pull request (PR). Como cada uno toca solo sus carpetas, los PR se pueden unir sin esperar al otro.
+
+| Rama | Dueño | Contenido |
+|---|---|---|
+| `feature/eventos` | Eddie | `src/features/eventos/` |
+| `feature/panel-admin` | Eddie | `src/features/admin/`, `src/layout/`, `src/data/reportes.js`, `README.md` |
+| `feature/cuenta` | Gabriel | `src/features/cuenta/` |
+| `feature/compra` | Gabriel | `src/features/compra/`, `src/data/ordenes.js`, `docs/cuenta-y-compra.md` |
+| `fix/...` | Quien lo necesite | Correcciones a archivos compartidos (avisar antes) |
 
 ```bash
-# 1. Antes de empezar, traer lo que subió el otro
-git pull --rebase
+# 1. Partir siempre de main actualizado
+git switch main
+git pull
 
-# 2. Trabajar... y al terminar un avance, agregar SOLO tus carpetas
+# 2. Crear la rama del módulo (solo la primera vez; después: git switch feature/compra)
+git switch -c feature/compra
+
+# 3. Trabajar... y agregar SOLO tus carpetas
 git add src/features/compra
 git commit -m "Agrega el formulario de pago con validación"
 
-# 3. Antes de subir, traer de nuevo y luego subir
-git pull --rebase
-git push
+# 4. Subir la rama
+git push -u origin feature/compra
 ```
+
+5. En GitHub aparece el botón **Compare & pull request**: crea el PR hacia `main` y pulsa **Merge pull request**. Cada uno une sus propios PR.
+6. Después de unir un PR, vuelve a `main` y actualízala con `git switch main` y `git pull`.
 
 - **Nunca uses `git add .`**: así evitas subir por accidente un archivo que no es tuyo.
 - Mensajes de commit en español, en presente: "Agrega…", "Corrige…", "Ajusta…".
-- Como nunca tocamos los mismos archivos, el `pull --rebase` se aplica solo, sin conflictos.
+- Si `main` cambió mientras trabajabas en tu rama, tráelo con `git pull origin main` antes de crear el PR. Como no tocamos los mismos archivos, se une solo.
 
 ## 7. Antes de dar una pantalla por terminada
 
