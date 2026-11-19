@@ -1,0 +1,155 @@
+.encabezado {
+  background-color: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+}
+
+/* Móvil: logo y acciones arriba; buscador y navegación abajo */
+.encabezado__contenido {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'logo acciones'
+    'buscador buscador'
+    'nav nav';
+  align-items: center;
+  gap: var(--espacio-2);
+  padding-block: var(--espacio-2);
+}
+
+.encabezado__logo {
+  grid-area: logo;
+  border-radius: var(--radio-boton);
+}
+
+.encabezado__buscador {
+  grid-area: buscador;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-1) var(--espacio-2);
+  color: var(--texto-secundario);
+  background-color: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-boton);
+}
+
+.encabezado__buscador:focus-within {
+  outline: 3px solid var(--secundario);
+  outline-offset: 2px;
+}
+
+.encabezado__buscador svg {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.encabezado__buscador input {
+  flex: 1;
+  min-width: 0;
+  color: var(--texto-principal);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.encabezado__nav {
+  grid-area: nav;
+}
+
+.encabezado__nav ul {
+  display: flex;
+  gap: var(--espacio-3);
+}
+
+.encabezado__nav a {
+  color: var(--texto-secundario);
+}
+
+.encabezado__nav a:hover,
+.encabezado__nav a[aria-current='page'] {
+  color: var(--texto-principal);
+}
+
+.encabezado__nav a[aria-current='page'] {
+  font-weight: 600;
+}
+
+.encabezado__acciones {
+  grid-area: acciones;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--espacio-2);
+}
+
+.encabezado__carrito {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--texto-principal);
+  border-radius: var(--radio-boton);
+}
+
+.encabezado__carrito:hover {
+  background-color: var(--fondo);
+}
+
+.encabezado__carrito svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.encabezado__contador {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.125rem;
+  min-width: 1.25rem;
+  padding: 0 0.25rem;
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-align: center;
+  color: var(--superficie);
+  background-color: var(--primario);
+  border-radius: var(--radio-pildora);
+}
+
+/* En móvil el saludo se oculta para que quepan las acciones */
+.encabezado__saludo {
+  display: none;
+  color: var(--texto-secundario);
+}
+
+.encabezado__saludo:hover {
+  color: var(--texto-principal);
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .encabezado__contenido {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      'logo nav acciones'
+      'buscador buscador buscador';
+  }
+
+  .encabezado__nav ul {
+    justify-content: flex-end;
+  }
+
+  .encabezado__saludo {
+    display: inline;
+  }
+}
+
+/* Escritorio: todo en una fila, como en el prototipo */
+@media (min-width: 1024px) {
+  .encabezado__contenido {
+    grid-template-columns: auto minmax(16rem, 26rem) 1fr auto;
+    grid-template-areas: 'logo buscador nav acciones';
+    gap: var(--espacio-3);
+  }
+}

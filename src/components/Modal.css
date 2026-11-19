@@ -1,0 +1,47 @@
+.modal {
+  width: min(28.5rem, 100% - 2rem);
+  padding: 0;
+  margin: auto;
+  color: var(--texto-principal);
+  background: none;
+  border: none;
+}
+
+.modal::backdrop {
+  background-color: rgba(30, 20, 51, 0.45);
+}
+
+.modal__caja {
+  padding: var(--espacio-4) var(--espacio-3);
+  background-color: var(--superficie);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-modal);
+}
+
+.modal__titulo {
+  font-size: var(--texto-lg);
+}
+
+.modal__contenido {
+  margin-top: var(--espacio-2);
+  color: var(--texto-secundario);
+}
+
+/* Fila de botones al final del modal */
+.modal__acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--espacio-1);
+  margin-top: var(--espacio-3);
+}
+
+@media (min-width: 768px) {
+  .modal__caja {
+    padding: var(--espacio-4);
+  }
+
+  .modal__acciones {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

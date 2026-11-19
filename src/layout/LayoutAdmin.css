@@ -1,0 +1,30 @@
+/* Móvil y tablet: la barra va arriba */
+.layout-admin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+}
+
+.layout-admin__contenido {
+  min-width: 0;
+  padding: var(--espacio-3) var(--espacio-2) var(--espacio-6);
+}
+
+@media (min-width: 768px) {
+  .layout-admin__contenido {
+    padding: var(--espacio-4);
+  }
+}
+
+/* Escritorio: barra lateral fija a la izquierda, como en el prototipo */
+@media (min-width: 1024px) {
+  .layout-admin {
+    grid-template-columns: var(--ancho-barra-admin) minmax(0, 1fr);
+    grid-template-rows: 1fr;
+  }
+
+  .layout-admin__contenido {
+    padding: var(--espacio-4) var(--espacio-6);
+  }
+}

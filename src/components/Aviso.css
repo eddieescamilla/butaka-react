@@ -1,0 +1,41 @@
+.aviso {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: 0.625rem var(--espacio-2);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  border-radius: var(--radio-boton);
+}
+
+.aviso--exito {
+  color: var(--exito);
+  background-color: var(--exito-fondo);
+}
+
+.aviso--error {
+  color: var(--error);
+  background-color: var(--error-fondo);
+}
+
+.aviso--info {
+  color: var(--secundario);
+  background-color: var(--lavanda);
+}
+
+.aviso__icono {
+  font-weight: 700;
+}
+
+.aviso__mensaje {
+  flex: 1;
+}
+
+.aviso__cerrar {
+  padding: 0.25rem 0.5rem;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--radio-boton);
+  cursor: pointer;
+}

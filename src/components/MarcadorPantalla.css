@@ -1,0 +1,33 @@
+.marcador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding-block: var(--espacio-4);
+}
+
+.marcador__aviso {
+  align-self: flex-start;
+  padding: var(--espacio-1) var(--espacio-2);
+  font-size: var(--texto-sm);
+  color: var(--advertencia);
+  background-color: var(--advertencia-fondo);
+  border: 1px dashed var(--advertencia);
+  border-radius: var(--radio-boton);
+}
+
+.marcador__accesos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+  padding: var(--espacio-3);
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+}
+
+.marcador__accesos ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}

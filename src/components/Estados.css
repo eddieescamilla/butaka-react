@@ -1,0 +1,54 @@
+/* Estilos compartidos por EstadoCarga, EstadoVacio y EstadoError */
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-6) var(--espacio-2);
+  text-align: center;
+}
+
+.estado__indicador {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 4px solid var(--lavanda);
+  border-top-color: var(--primario);
+  border-radius: 50%;
+  animation: estado-girar 0.9s linear infinite;
+}
+
+.estado__icono {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--texto-xl);
+  font-weight: 700;
+  color: var(--secundario);
+  background-color: var(--lavanda);
+  border-radius: 50%;
+}
+
+.estado--error .estado__icono {
+  color: var(--error);
+  background-color: var(--error-fondo);
+}
+
+.estado__titulo {
+  font-size: var(--texto-lg);
+}
+
+.estado__texto {
+  max-width: 28rem;
+  color: var(--texto-secundario);
+}
+
+.estado__accion {
+  margin-top: var(--espacio-2);
+}
+
+@keyframes estado-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

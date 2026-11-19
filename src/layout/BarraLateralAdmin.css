@@ -1,0 +1,110 @@
+/* Móvil y tablet: barra superior con navegación desplazable */
+.barra-admin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-2);
+  background-color: var(--superficie);
+  border-bottom: 1px solid var(--borde);
+}
+
+.barra-admin__logo {
+  border-radius: var(--radio-boton);
+}
+
+.barra-admin__nav {
+  order: 3;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.barra-admin__nav ul {
+  display: flex;
+  gap: var(--espacio-1);
+}
+
+.barra-admin__enlace {
+  display: block;
+  padding: var(--espacio-1) var(--espacio-2);
+  white-space: nowrap;
+  color: var(--texto-principal);
+  border-radius: var(--radio-boton);
+}
+
+.barra-admin__enlace:hover {
+  background-color: var(--fondo);
+}
+
+.barra-admin__enlace[aria-current='page'] {
+  font-weight: 600;
+  background-color: var(--rosa-pastel);
+}
+
+.barra-admin__pie {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  margin-left: auto;
+}
+
+.barra-admin__usuario,
+.barra-admin__sitio {
+  display: none;
+}
+
+/* Escritorio: barra lateral a la izquierda */
+@media (min-width: 1024px) {
+  .barra-admin {
+    position: sticky;
+    top: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    height: 100vh;
+    padding: var(--espacio-3) var(--espacio-2);
+    border-right: 1px solid var(--borde);
+    border-bottom: none;
+  }
+
+  .barra-admin__logo {
+    padding-inline: var(--espacio-1);
+  }
+
+  .barra-admin__nav {
+    order: 0;
+    margin-top: var(--espacio-4);
+    overflow: visible;
+  }
+
+  .barra-admin__nav ul {
+    flex-direction: column;
+  }
+
+  .barra-admin__pie {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espacio-1);
+    margin-top: auto;
+    margin-left: 0;
+  }
+
+  .barra-admin__usuario {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--texto-sm);
+    font-weight: 600;
+  }
+
+  .barra-admin__usuario span {
+    font-weight: 400;
+    color: var(--texto-secundario);
+  }
+
+  .barra-admin__sitio {
+    display: block;
+    font-size: var(--texto-sm);
+    color: var(--secundario);
+  }
+}

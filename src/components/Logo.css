@@ -1,0 +1,25 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xl);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--texto-principal);
+}
+
+.logo__icono {
+  width: 2rem;
+  height: 2rem;
+  color: var(--primario);
+}
+
+.logo--grande {
+  font-size: var(--texto-2xl);
+}
+
+.logo--grande .logo__icono {
+  width: 2.5rem;
+  height: 2.5rem;
+}

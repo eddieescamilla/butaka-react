@@ -1,0 +1,71 @@
+/* ==========================================================
+   tokens.css: variables del manual de marca de Butaka
+   ARCHIVO COMPARTIDO (congelado). Ver CONTRIBUIR.md antes de cambiarlo.
+
+   Breakpoints (las variables CSS no funcionan dentro de @media,
+   así que se escriben como número en cada archivo):
+   - Móvil:      diseño base, se verifica a 375 px
+   - Tablet:     @media (min-width: 768px)
+   - Escritorio: @media (min-width: 1024px), se verifica a 1440 px
+   ========================================================== */
+
+:root {
+  /* Colores de marca */
+  --primario: #E11D74;
+  --primario-hover: #B8155E;
+  --secundario: #7C3AED;
+  --secundario-hover: #6425D0;
+
+  /* Colores de apoyo (etiquetas de categoría) */
+  --rosa-pastel: #FFD6E8;
+  --lavanda: #E4DAFF;
+  --menta: #CFF5E7;
+  --durazno: #FFE3CC;
+
+  /* Neutros */
+  --fondo: #FBF8FF;
+  --superficie: #FFFFFF;
+  --texto-principal: #1E1433;
+  --texto-secundario: #5C5470;
+  --borde: #EAE3F5;
+  --borde-fuerte: #CFC6E0;
+
+  /* Estados */
+  --exito: #15803D;
+  --exito-fondo: #DCFCE7;
+  --error: #DC2626;
+  --error-fondo: #FEE2E2;
+  --advertencia: #B45309;
+  --advertencia-fondo: #FEF3C7;
+  --neutro-fondo: #F1EEF6;
+
+  /* Tipografía */
+  --fuente-titulos: "Poppins", system-ui, sans-serif;
+  --fuente-texto: "Inter", system-ui, sans-serif;
+  --texto-xs: 0.75rem;
+  --texto-sm: 0.875rem;
+  --texto-base: 1rem;
+  --texto-lg: 1.125rem;
+  --texto-xl: 1.5rem;
+  --texto-2xl: 2rem;
+  --texto-3xl: 3rem;
+
+  /* Espaciado */
+  --espacio-1: 0.5rem;
+  --espacio-2: 1rem;
+  --espacio-3: 1.5rem;
+  --espacio-4: 2rem;
+  --espacio-6: 3rem;
+  --espacio-8: 4rem;
+
+  /* Bordes y sombras */
+  --radio-boton: 0.5rem;
+  --radio-tarjeta: 0.75rem;
+  --radio-pildora: 999px;
+  --sombra-tarjeta: 0 2px 8px rgba(30, 20, 51, 0.06);
+  --sombra-modal: 0 16px 48px rgba(30, 20, 51, 0.2);
+
+  /* Layout */
+  --ancho-maximo: 81rem;
+  --ancho-barra-admin: 15rem;
+}

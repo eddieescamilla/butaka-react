@@ -1,0 +1,26 @@
+.pie {
+  background-color: var(--superficie);
+  border-top: 1px solid var(--borde);
+}
+
+.pie__contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding-block: var(--espacio-4);
+  text-align: center;
+}
+
+.pie__texto {
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+}
+
+@media (min-width: 768px) {
+  .pie__contenido {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-block: var(--espacio-6);
+  }
+}

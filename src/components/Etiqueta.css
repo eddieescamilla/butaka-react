@@ -1,0 +1,51 @@
+.etiqueta {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--texto-principal);
+  white-space: nowrap;
+  border-radius: var(--radio-pildora);
+}
+
+/* Categorías */
+.etiqueta--conciertos {
+  background-color: var(--rosa-pastel);
+}
+
+.etiqueta--teatro {
+  background-color: var(--lavanda);
+}
+
+.etiqueta--deportes {
+  background-color: var(--menta);
+}
+
+.etiqueta--otros {
+  background-color: var(--durazno);
+}
+
+/* Estados */
+.etiqueta--en-venta,
+.etiqueta--activo {
+  color: var(--exito);
+  background-color: var(--exito-fondo);
+}
+
+.etiqueta--pocos-boletos {
+  color: var(--advertencia);
+  background-color: var(--advertencia-fondo);
+}
+
+.etiqueta--agotado {
+  color: var(--error);
+  background-color: var(--error-fondo);
+}
+
+.etiqueta--cancelado,
+.etiqueta--finalizado,
+.etiqueta--inactivo {
+  color: var(--texto-secundario);
+  background-color: var(--neutro-fondo);
+}
