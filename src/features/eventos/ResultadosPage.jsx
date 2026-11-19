@@ -1,17 +1,19 @@
-// DUEÑO: Eddie. Módulo 2: gestión de eventos.
-// MARCADOR: reemplaza todo el contenido de este archivo con tu pantalla.
-// Props que recibe toda pantalla: { params, irA, sesion, carrito }
-import MarcadorPantalla from '../../components/MarcadorPantalla.jsx';
-import Boton from '../../components/Boton.jsx';
+// DUEÑO: Eddie. Módulo 2: gestión de eventos. Resultados de búsqueda.
+// Props: { params, irA }  ·  params.busqueda: texto escrito en el buscador
+import EnlaceVista from '../../components/EnlaceVista.jsx';
+import CatalogoEventos from './CatalogoEventos.jsx';
+import './ResultadosPage.css';
 
 export default function ResultadosPage({ params, irA }) {
-  // params.busqueda trae el texto escrito en el buscador del encabezado
+  const busqueda = params.busqueda ?? '';
+
   return (
-    <MarcadorPantalla titulo="Resultados de búsqueda" responsable="Eddie" modulo="Gestión de eventos">
-      <p>Búsqueda recibida: “{params.busqueda || '(vacía)'}”</p>
-      <Boton variante="secundario" onClick={() => irA('inicio')}>
-        Volver al inicio
-      </Boton>
-    </MarcadorPantalla>
+    <div className="contenedor resultados">
+      <EnlaceVista vista="inicio" irA={irA} className="resultados__volver">
+        ← Volver al inicio
+      </EnlaceVista>
+      <h1 className="pagina__titulo">{busqueda ? `Resultados para “${busqueda}”` : 'Todos los eventos'}</h1>
+      <CatalogoEventos busqueda={busqueda} irA={irA} tituloId="resultados-lista" titulo="Eventos encontrados" />
+    </div>
   );
 }

@@ -1,23 +1,28 @@
-// DUEÑO: Eddie. Módulo 2: gestión de eventos.
-// MARCADOR: reemplaza todo el contenido de este archivo con tu pantalla.
-// Props que recibe toda pantalla: { params, irA, sesion, carrito }
-import MarcadorPantalla from '../../components/MarcadorPantalla.jsx';
+// DUEÑO: Eddie. Módulo 2: gestión de eventos. Pantalla de inicio.
+// Props: { irA }
 import Boton from '../../components/Boton.jsx';
-import { EVENTOS } from '../../data/eventos.js';
+import CatalogoEventos from './CatalogoEventos.jsx';
+import './InicioPage.css';
 
 export default function InicioPage({ irA }) {
+  function irAlListado() {
+    document.getElementById('eventos-titulo')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
   return (
-    <MarcadorPantalla titulo="Inicio" responsable="Eddie" modulo="Gestión de eventos">
-      <p>Accesos de prueba para recorrer el flujo:</p>
-      <ul>
-        {EVENTOS.slice(0, 4).map((evento) => (
-          <li key={evento.id}>
-            <Boton variante="texto" onClick={() => irA('detalle-evento', { eventoId: evento.id })}>
-              Ver detalle: {evento.titulo}
-            </Boton>
-          </li>
-        ))}
-      </ul>
-    </MarcadorPantalla>
+    <div className="contenedor inicio">
+      <section className="inicio__hero" aria-labelledby="hero-titulo">
+        <h1 id="hero-titulo" className="inicio__hero-titulo">
+          Tu lugar te espera.
+        </h1>
+        <p className="inicio__hero-texto">
+          Conciertos, teatro y deportes en un solo lugar. Elige tu zona, paga en línea y recibe tu boleto con
+          código QR al instante.
+        </p>
+        <Boton onClick={irAlListado}>Explorar eventos</Boton>
+      </section>
+
+      <CatalogoEventos irA={irA} tituloId="eventos-titulo" titulo="Próximos eventos" />
+    </div>
   );
 }

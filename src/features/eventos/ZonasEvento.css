@@ -1,0 +1,64 @@
+.zonas-evento {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.zonas-evento__zona {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  padding-bottom: var(--espacio-2);
+  border-bottom: 1px solid var(--borde);
+}
+
+.zonas-evento__zona:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.zonas-evento__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-1);
+}
+
+.zonas-evento__nombre {
+  font-weight: 600;
+}
+
+.zonas-evento__precio {
+  font-weight: 600;
+  color: var(--primario);
+}
+
+.zonas-evento__barra {
+  height: 0.5rem;
+  overflow: hidden;
+  background-color: var(--neutro-fondo);
+  border-radius: var(--radio-pildora);
+}
+
+.zonas-evento__relleno {
+  display: block;
+  height: 100%;
+  border-radius: var(--radio-pildora);
+}
+
+.zonas-evento__relleno--en-venta {
+  background-color: var(--exito);
+}
+
+.zonas-evento__relleno--pocos-boletos {
+  background-color: var(--advertencia);
+}
+
+.zonas-evento__relleno--agotado {
+  background-color: var(--error);
+}
+
+.zonas-evento__disponibles {
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+}
