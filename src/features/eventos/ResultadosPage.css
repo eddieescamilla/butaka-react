@@ -1,0 +1,17 @@
+.resultados {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-3);
+}
+
+.resultados__volver {
+  align-self: flex-start;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--secundario);
+}
+
+.resultados__volver:hover {
+  text-decoration: underline;
+}
