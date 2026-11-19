@@ -18,3 +18,6 @@ export const VENTAS_POR_MES = [
   { mes: 'Oct', boletos: 1146, ingresos: 30050 },
   { mes: 'Nov', boletos: 1284, ingresos: 32450 },
 ];
+
+// Reembolsos procesados en el periodo (por eventos cancelados o cambios de fecha)
+export const REEMBOLSOS = { valor: 6, variacion: '2 menos que en octubre' };

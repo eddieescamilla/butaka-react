@@ -97,9 +97,31 @@ Las reglas de trabajo del equipo están en [CONTRIBUIR.md](CONTRIBUIR.md).
 | `LayoutCliente`, `Encabezado`, `PiePagina` | Estructura del sitio del cliente |
 | `LayoutAdmin`, `BarraLateralAdmin` | Estructura del panel de administración |
 
-### Eventos y panel de administración (Eddie)
+### Eventos (Eddie)
 
-✏️ Completar con los componentes de `features/eventos/` y `features/admin/`.
+| Componente | Uso | Props principales |
+|---|---|---|
+| `CatalogoEventos` | Listado con filtro por categoría, orden y estados de carga, error y vacío. Lo usan Inicio y Resultados | `busqueda`, `irA`, `titulo` |
+| `FiltroCategorias` | Píldoras para filtrar por categoría (`aria-pressed`) | `valor`, `onCambiar` |
+| `TarjetaEvento` | Tarjeta de evento con imagen, categoría, fecha, lugar y precio desde | `evento`, `irA` |
+| `ZonasEvento` | Zonas del evento con precio, barra de ocupación y disponibilidad | `zonas` |
+| `InicioPage`, `ResultadosPage`, `DetalleEventoPage` | Pantallas del módulo de eventos | `params`, `irA` |
+
+### Panel de administración, inventario y reportes (Eddie)
+
+| Componente | Uso | Props principales |
+|---|---|---|
+| `EncabezadoAdmin` | Título, subtítulo, aviso de confirmación y acción principal de cada pantalla | `titulo`, `subtitulo`, `accion`, `aviso` |
+| `TablaDatos` | Tabla reutilizable; en móvil cada fila se muestra como tarjeta | `titulo`, `columnas`, `filas` |
+| `TarjetaMetrica` | Indicador del dashboard y de los reportes | `etiqueta`, `valor`, `detalle` |
+| `GraficoBarras` | Gráfico de barras con CSS y tabla alternativa para lectores de pantalla | `titulo`, `datos`, `formato` |
+| `ModalConfirmacion` | Confirmación de acciones críticas (eliminar) | `abierto`, `mensaje`, `procesando`, `onConfirmar` |
+| `FormularioEvento` | Crear o editar un evento, con zonas y validación | `inicial`, `esNuevo`, `onGuardar` |
+| `FormularioZona` | Agregar o editar una zona dentro de un modal | `zona`, `todas`, `onGuardar` |
+| `FormularioUsuario` | Crear o editar un usuario, con validación | `inicial`, `otrosUsuarios`, `onGuardar` |
+| `DashboardPage`, `EventosAdminPage`, `CrearEventoPage`, `InventarioPage`, `UsuariosPage`, `CrearUsuarioPage`, `ReportesPage` | Pantallas del panel | `params`, `irA`, `sesion` |
+
+Hooks propios: `usePreferencias` (categoría y orden del listado), `useEventosAdmin`, `useUsuariosAdmin` y `useAviso`.
 
 ### Cuenta, compra y boletos (Gabriel)
 
@@ -114,9 +136,13 @@ Ver [docs/cuenta-y-compra.md](docs/cuenta-y-compra.md).
 | Carrito | `useCarrito()` en `App.jsx` | Encabezado, flujo de compra | `localStorage` → `butaka:carrito` |
 | Órdenes y boletos | ✏️ | Mis boletos, boleto | `localStorage` → `butaka:ordenes` |
 | Preferencias | `usePreferencias()` | Listado de eventos | `localStorage` → `butaka:preferencias` |
+| Eventos del panel | `useEventosAdmin()` | Panel, inventario, reportes y catálogo del cliente | `localStorage` → `butaka:admin-eventos` |
+| Usuarios del panel | `useUsuariosAdmin()` | Pantallas de usuarios | `localStorage` → `butaka:admin-usuarios` |
 | Datos de cada pantalla | `usePeticion()` en cada pantalla | La pantalla que los pide | No se guardan |
 
-Valores derivados que se calculan y no se guardan como estado: `totalItems`, `subtotal`, `cargoServicio` y `total` del carrito; `haySesion` y `esAdmin` de la sesión; disponibilidad por zona y "precio desde" de cada evento.
+Valores derivados que se calculan y no se guardan como estado: `totalItems`, `subtotal`, `cargoServicio` y `total` del carrito; `haySesion` y `esAdmin` de la sesión; disponibilidad por zona, "precio desde" y estado de venta de cada evento; las métricas de los reportes y la lista de próximos eventos del dashboard.
+
+Los eventos que crea, edita o elimina el panel se guardan en `butaka:admin-eventos`, y `src/servicios/eventos.js` lee esa misma clave. Por eso un evento creado en el panel aparece en el sitio del cliente.
 
 El detalle del flujo de estado está en [docs/arquitectura.md](docs/arquitectura.md).
 
@@ -144,4 +170,8 @@ Todos los datos son ficticios: los correos usan el dominio de ejemplo `correo.co
 - **Navegación sin React Router:** la vista actual se guarda en el estado de `App.jsx` y se sincroniza con el historial del navegador, para que funcionen el botón Atrás y la recarga.
 - **Estado global sin Context:** la sesión y el carrito viven en `App.jsx` y se pasan por props. Context se incorpora en la tercera entrega.
 - **Color de advertencia:** se oscureció de `#F59E0B` a `#B45309` para cumplir el contraste mínimo cuando se usa como texto.
-- ✏️ Agregar las decisiones propias de cada módulo.
+- **Roles en el panel:** el administrador ve todo; el organizador ve y administra solo sus eventos, y no tiene acceso a Usuarios.
+- **Los usuarios no se borran:** se desactivan, y un administrador no puede desactivar su propia cuenta.
+- **Inventario:** una zona con boletos vendidos no se puede eliminar, y su capacidad no puede bajar de lo ya vendido.
+- **Reportes:** las métricas se calculan a partir de los eventos; la evolución mensual es estática. "Descargar reporte" genera un CSV en el navegador.
+- ✏️ Agregar las decisiones de los módulos de cuenta y compra.
