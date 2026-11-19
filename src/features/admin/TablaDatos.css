@@ -1,0 +1,96 @@
+.tabla-datos {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+}
+
+.tabla-datos__tabla {
+  width: 100%;
+  font-size: var(--texto-sm);
+  border-collapse: collapse;
+}
+
+/* ---- Móvil: cada fila es una tarjeta con "Etiqueta: valor" ---- */
+.tabla-datos__tabla thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.tabla-datos__tabla tr {
+  display: block;
+  padding: var(--espacio-2);
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla-datos__tabla tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-datos__tabla td {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: 0.375rem 0;
+  text-align: right;
+}
+
+.tabla-datos__tabla td::before {
+  content: attr(data-etiqueta);
+  font-weight: 600;
+  text-align: left;
+  color: var(--texto-secundario);
+}
+
+/* ---- Tablet y escritorio: tabla normal, como en el prototipo ---- */
+@media (min-width: 768px) {
+  .tabla-datos {
+    overflow: hidden;
+  }
+
+  .tabla-datos__tabla thead {
+    position: static;
+    width: auto;
+    height: auto;
+    clip: auto;
+  }
+
+  .tabla-datos__tabla tr {
+    display: table-row;
+    padding: 0;
+  }
+
+  .tabla-datos__tabla th,
+  .tabla-datos__tabla td {
+    display: table-cell;
+    padding: 0.75rem var(--espacio-2);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .tabla-datos__tabla td::before {
+    content: none;
+  }
+
+  .tabla-datos__tabla th {
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    color: var(--texto-secundario);
+    background-color: var(--lavanda);
+  }
+
+  .tabla-datos__tabla tbody tr {
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .tabla-datos__tabla tbody tr:hover {
+    background-color: var(--fondo);
+  }
+
+  .tabla-datos__tabla .tabla-datos__celda--derecha {
+    text-align: right;
+  }
+}

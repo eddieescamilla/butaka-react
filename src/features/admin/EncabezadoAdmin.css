@@ -1,0 +1,41 @@
+.encabezado-admin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--espacio-2);
+  margin-bottom: var(--espacio-3);
+}
+
+.encabezado-admin__aviso:empty {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .encabezado-admin {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'textos accion'
+      'aviso aviso';
+    align-items: start;
+  }
+
+  .encabezado-admin__textos {
+    grid-area: textos;
+  }
+
+  .encabezado-admin__accion {
+    grid-area: accion;
+  }
+
+  .encabezado-admin__aviso {
+    grid-area: aviso;
+  }
+}
+
+/* Escritorio: el aviso va entre el título y el botón, como en el prototipo */
+@media (min-width: 1024px) {
+  .encabezado-admin {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: 'textos aviso accion';
+    margin-bottom: var(--espacio-4);
+  }
+}

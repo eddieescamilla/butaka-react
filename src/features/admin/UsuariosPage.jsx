@@ -1,13 +1,104 @@
-// DUEÑO: Eddie. Módulos 3, 7 y 8: inventario, panel de administración y reportes.
-// MARCADOR: reemplaza todo el contenido de este archivo con tu pantalla.
-// Props que recibe toda pantalla: { params, irA, sesion, carrito }
-import MarcadorPantalla from '../../components/MarcadorPantalla.jsx';
+// DUEÑO: Eddie. Módulo 7: panel de administración. Usuarios.
+// Props: { params, irA, sesion }  ·  params.aviso: mensaje de confirmación opcional
+import { useMemo, useState } from 'react';
+import { ROLES } from '../../data/categorias.js';
 import Boton from '../../components/Boton.jsx';
+import CampoTexto from '../../components/CampoTexto.jsx';
+import EstadoCarga from '../../components/EstadoCarga.jsx';
+import EstadoVacio from '../../components/EstadoVacio.jsx';
+import EncabezadoAdmin from './EncabezadoAdmin.jsx';
+import TablaDatos from './TablaDatos.jsx';
+import { useUsuariosAdmin } from './useUsuariosAdmin.js';
+import { useAviso } from './useAviso.js';
+import './Admin.css';
 
-export default function UsuariosPage({ irA }) {
+const FILTRO_ROLES = [{ valor: '', texto: 'Todos los roles' }, ...Object.entries(ROLES).map(([valor, texto]) => ({ valor, texto }))];
+
+export default function UsuariosPage({ params, irA, sesion }) {
+  const { usuarios, cargando, cambiarEstado } = useUsuariosAdmin();
+  const { aviso, mostrarAviso, cerrarAviso } = useAviso(params.aviso);
+  const [busqueda, setBusqueda] = useState('');
+  const [rol, setRol] = useState('');
+  const [procesandoId, setProcesandoId] = useState(null);
+
+  const filas = useMemo(() => {
+    const termino = busqueda.trim().toLowerCase();
+    return usuarios
+      .filter((usuario) => !rol || usuario.rol === rol)
+      .filter(
+        (usuario) =>
+          !termino || `${usuario.nombre} ${usuario.apellido} ${usuario.correo}`.toLowerCase().includes(termino),
+      );
+  }, [usuarios, busqueda, rol]);
+
+  async function alternarEstado(usuario) {
+    if (procesandoId) return; // una operación a la vez
+    setProcesandoId(usuario.id);
+    try {
+      await cambiarEstado(usuario.id);
+      mostrarAviso(usuario.estado === 'activo' ? 'Usuario desactivado' : 'Usuario activado');
+    } finally {
+      setProcesandoId(null);
+    }
+  }
+
+  const columnas = [
+    { clave: 'nombre', titulo: 'Nombre', render: (u) => `${u.nombre} ${u.apellido}` },
+    { clave: 'correo', titulo: 'Correo' },
+    { clave: 'rol', titulo: 'Rol', render: (u) => ROLES[u.rol] },
+    {
+      clave: 'estado',
+      titulo: 'Estado',
+      render: (u) => <span className={`admin-estado admin-estado--${u.estado}`}>{u.estado === 'activo' ? 'Activo' : 'Inactivo'}</span>,
+    },
+    {
+      clave: 'acciones',
+      titulo: 'Acciones',
+      render: (u) => {
+        const esUnoMismo = u.id === sesion.usuario?.id;
+        return (
+          <span className="admin-acciones">
+            <Boton variante="texto" tamano="pequeno" onClick={() => irA('admin-crear-usuario', { usuarioId: u.id })} aria-label={`Editar a ${u.nombre} ${u.apellido}`}>
+              Editar
+            </Boton>
+            <Boton
+              variante="texto"
+              tamano="pequeno"
+              className={u.estado === 'activo' ? 'admin-acciones__peligro' : undefined}
+              disabled={esUnoMismo || (procesandoId !== null && procesandoId !== u.id)}
+              cargando={procesandoId === u.id}
+              title={esUnoMismo ? 'No puedes desactivar tu propia cuenta' : undefined}
+              onClick={() => alternarEstado(u)}
+              aria-label={`${u.estado === 'activo' ? 'Desactivar' : 'Activar'} a ${u.nombre} ${u.apellido}`}
+            >
+              {u.estado === 'activo' ? 'Desactivar' : 'Activar'}
+            </Boton>
+          </span>
+        );
+      },
+    },
+  ];
+
   return (
-    <MarcadorPantalla titulo="Usuarios" responsable="Eddie" modulo="Panel de administración">
-      <Boton onClick={() => irA('admin-crear-usuario')}>Agregar usuario</Boton>
-    </MarcadorPantalla>
+    <>
+      <EncabezadoAdmin
+        titulo="Usuarios"
+        subtitulo="Consulta y administra las cuentas de clientes, organizadores y administradores"
+        aviso={aviso}
+        onCerrarAviso={cerrarAviso}
+        accion={<Boton onClick={() => irA('admin-crear-usuario')}>Agregar usuario</Boton>}
+      />
+
+      <div className="admin-filtros">
+        <CampoTexto id="usuarios-buscar" etiqueta="Buscar por nombre o correo" type="search" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+        <CampoTexto id="usuarios-rol" etiqueta="Rol" opciones={FILTRO_ROLES} value={rol} onChange={(e) => setRol(e.target.value)} />
+      </div>
+
+      <div className="admin-seccion">
+        {cargando && <EstadoCarga mensaje="Cargando usuarios…" />}
+        {!cargando && filas.length === 0 && <EstadoVacio titulo="Ningún usuario coincide" mensaje="Cambia la búsqueda o el rol." />}
+        {!cargando && filas.length > 0 && <TablaDatos titulo="Lista de usuarios" columnas={columnas} filas={filas} />}
+      </div>
+    </>
   );
 }
