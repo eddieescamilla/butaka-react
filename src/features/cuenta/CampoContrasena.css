@@ -1,0 +1,27 @@
+.campo-contrasena {
+  position: relative;
+}
+
+/* El botón se ubica dentro del campo, a la derecha */
+.campo-contrasena .campo__control {
+  padding-right: 5.5rem;
+}
+
+.campo-contrasena__alternar {
+  position: absolute;
+  top: 1.875rem;
+  right: 0.375rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.625rem;
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--secundario);
+  background: none;
+  border: none;
+  border-radius: var(--radio-boton);
+  cursor: pointer;
+}
+
+.campo-contrasena__alternar:hover {
+  background-color: var(--fondo);
+}
