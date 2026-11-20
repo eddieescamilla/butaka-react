@@ -1,0 +1,57 @@
+.resultado-pago {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-2);
+  max-width: 36rem;
+  margin-inline: auto;
+  padding: var(--espacio-4) var(--espacio-3);
+  text-align: center;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+}
+
+.resultado-pago__icono {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: var(--texto-2xl);
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.resultado-pago--aprobado .resultado-pago__icono {
+  color: var(--exito);
+  background-color: var(--exito-fondo);
+}
+
+.resultado-pago--rechazado .resultado-pago__icono {
+  color: var(--error);
+  background-color: var(--error-fondo);
+}
+
+.resultado-pago__texto {
+  color: var(--texto-secundario);
+}
+
+.resultado-pago__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  width: 100%;
+  margin-top: var(--espacio-1);
+}
+
+@media (min-width: 768px) {
+  .resultado-pago {
+    padding: var(--espacio-6);
+  }
+
+  .resultado-pago__acciones {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+  }
+}

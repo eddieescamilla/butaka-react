@@ -1,0 +1,117 @@
+.boleto {
+  overflow: hidden;
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.boleto__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-1);
+  padding: var(--espacio-2) var(--espacio-3);
+  background-color: var(--lavanda);
+}
+
+.boleto__tipo {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--secundario);
+}
+
+.boleto__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+}
+
+.boleto__titulo {
+  font-size: var(--texto-xl);
+}
+
+.boleto__lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-2);
+}
+
+.boleto__lista dt {
+  font-size: var(--texto-xs);
+  color: var(--texto-secundario);
+}
+
+.boleto__lista dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* El QR va separado por una línea punteada, como un talón */
+.boleto__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding-top: var(--espacio-3);
+  text-align: center;
+  border-top: 2px dashed var(--borde-fuerte);
+}
+
+.boleto__codigo {
+  font-family: ui-monospace, monospace;
+  font-size: var(--texto-lg);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.boleto__instruccion {
+  max-width: 16rem;
+  font-size: var(--texto-xs);
+  color: var(--texto-secundario);
+}
+
+.boleto__acciones {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .boleto__cuerpo {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--espacio-4);
+  }
+
+  .boleto__titulo {
+    font-size: var(--texto-2xl);
+  }
+
+  .boleto__qr {
+    padding-top: 0;
+    padding-left: var(--espacio-4);
+    border-top: none;
+    border-left: 2px dashed var(--borde-fuerte);
+  }
+}
+
+/* Al imprimir, solo sale el boleto */
+@media print {
+  body {
+    background: #FFFFFF;
+  }
+
+  .encabezado,
+  .pie,
+  .saltar-contenido,
+  .boleto__no-imprimir {
+    display: none !important;
+  }
+
+  .boleto {
+    box-shadow: none;
+  }
+}

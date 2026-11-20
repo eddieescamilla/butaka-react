@@ -1,0 +1,83 @@
+.selector-zona {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.selector-zona__leyenda {
+  margin-bottom: var(--espacio-2);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-lg);
+  font-weight: 600;
+}
+
+.selector-zona__opciones {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-1);
+}
+
+.selector-zona__opcion {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'radio nombre precio'
+    'radio disponibles disponibles';
+  align-items: center;
+  gap: 0.125rem var(--espacio-2);
+  padding: var(--espacio-2);
+  background-color: var(--superficie);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.selector-zona__opcion:hover {
+  border-color: var(--borde-fuerte);
+}
+
+.selector-zona__opcion:has(:checked) {
+  background-color: #FFF5FA;
+  border-color: var(--primario);
+}
+
+.selector-zona__opcion:has(:focus-visible) {
+  outline: 3px solid var(--secundario);
+  outline-offset: 2px;
+}
+
+.selector-zona__opcion--agotada {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.selector-zona__radio {
+  grid-area: radio;
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--primario);
+}
+
+.selector-zona__nombre {
+  grid-area: nombre;
+  font-weight: 600;
+}
+
+.selector-zona__precio {
+  grid-area: precio;
+  font-weight: 600;
+  color: var(--primario);
+}
+
+.selector-zona__disponibles {
+  grid-area: disponibles;
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+}
+
+@media (min-width: 768px) {
+  .selector-zona__opciones {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+}
