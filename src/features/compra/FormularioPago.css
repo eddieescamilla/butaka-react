@@ -1,0 +1,44 @@
+.formulario-pago {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.formulario-pago__resumen {
+  padding: var(--espacio-2);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--error);
+  background-color: var(--error-fondo);
+  border-radius: var(--radio-boton);
+}
+
+.formulario-pago__fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espacio-2);
+}
+
+.formulario-pago__prueba {
+  padding: var(--espacio-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+  background-color: var(--fondo);
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-boton);
+}
+
+.formulario-pago__prueba ul {
+  margin-top: 0.25rem;
+}
+
+.formulario-pago__prueba code {
+  font-size: var(--texto-xs);
+  color: var(--texto-principal);
+}
+
+.formulario-pago__seguridad {
+  font-size: var(--texto-xs);
+  color: var(--texto-secundario);
+  text-align: center;
+}

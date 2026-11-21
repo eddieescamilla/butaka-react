@@ -1,0 +1,50 @@
+.resumen-compra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  align-self: start;
+  padding: var(--espacio-3);
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.resumen-compra__titulo {
+  font-size: var(--texto-lg);
+}
+
+.resumen-compra__lineas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.resumen-compra__lineas div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  color: var(--texto-secundario);
+}
+
+.resumen-compra__lineas dd {
+  margin: 0;
+  font-weight: 500;
+  color: var(--texto-principal);
+}
+
+.resumen-compra__total {
+  padding-top: var(--espacio-1);
+  font-size: var(--texto-lg);
+  border-top: 1px solid var(--borde);
+}
+
+.resumen-compra__total dt {
+  font-weight: 600;
+  color: var(--texto-principal);
+}
+
+.resumen-compra__total dd {
+  font-weight: 600 !important;
+  color: var(--primario) !important;
+}

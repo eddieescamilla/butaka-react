@@ -1,0 +1,55 @@
+.indicador-pasos ol {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--espacio-1);
+}
+
+.indicador-pasos__paso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding-top: var(--espacio-1);
+  font-size: var(--texto-xs);
+  color: var(--texto-secundario);
+  text-align: center;
+  border-top: 4px solid var(--borde);
+}
+
+.indicador-pasos__numero {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-weight: 600;
+  background-color: var(--neutro-fondo);
+  border-radius: 50%;
+}
+
+.indicador-pasos__paso--hecho {
+  border-top-color: var(--secundario);
+}
+
+.indicador-pasos__paso--hecho .indicador-pasos__numero {
+  color: var(--superficie);
+  background-color: var(--secundario);
+}
+
+.indicador-pasos__paso--actual {
+  font-weight: 600;
+  color: var(--texto-principal);
+  border-top-color: var(--primario);
+}
+
+.indicador-pasos__paso--actual .indicador-pasos__numero {
+  color: var(--superficie);
+  background-color: var(--primario);
+}
+
+@media (min-width: 768px) {
+  .indicador-pasos__paso {
+    flex-direction: row;
+    justify-content: center;
+    font-size: var(--texto-sm);
+  }
+}

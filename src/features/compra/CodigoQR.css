@@ -1,0 +1,4 @@
+.codigo-qr {
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-boton);
+}

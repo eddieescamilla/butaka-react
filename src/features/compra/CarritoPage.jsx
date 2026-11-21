@@ -1,27 +1,54 @@
-// DUEÑO: Gabriel. Módulos 4, 5 y 6: proceso de compra, pagos y boletos electrónicos.
-// MARCADOR: reemplaza todo el contenido de este archivo con tu pantalla.
-// Props que recibe toda pantalla: { params, irA, sesion, carrito }
-import MarcadorPantalla from '../../components/MarcadorPantalla.jsx';
+// DUEÑO: Gabriel. Módulo 4: proceso de compra. Paso 2: carrito.
+// Props: { irA, carrito }
 import Boton from '../../components/Boton.jsx';
-import { formatearPrecio } from '../../utils/formato.js';
+import EstadoVacio from '../../components/EstadoVacio.jsx';
+import IndicadorPasos from './IndicadorPasos.jsx';
+import ItemCarrito from './ItemCarrito.jsx';
+import ResumenCompra from './ResumenCompra.jsx';
+import './Compra.css';
 
 export default function CarritoPage({ irA, carrito }) {
+  if (carrito.items.length === 0) {
+    return (
+      <div className="contenedor compra">
+        <IndicadorPasos actual={2} />
+        <h1 className="pagina__titulo">Tu carrito</h1>
+        <EstadoVacio titulo="Tu carrito está vacío" mensaje="Explora los eventos y elige tus boletos.">
+          <Boton onClick={() => irA('inicio')}>Ver eventos</Boton>
+        </EstadoVacio>
+      </div>
+    );
+  }
+
   return (
-    <MarcadorPantalla titulo="Carrito" responsable="Gabriel" modulo="Proceso de compra · Paso 2 de 4">
-      <ul>
-        {carrito.items.map((item) => (
-          <li key={item.clave}>
-            {item.cantidad} × {item.eventoTitulo} · {item.zonaNombre}
-          </li>
-        ))}
-      </ul>
-      <p>Total: {formatearPrecio(carrito.total)}</p>
-      <Boton onClick={() => irA('resumen')} disabled={carrito.items.length === 0}>
-        Continuar
-      </Boton>
-      <Boton variante="texto" onClick={carrito.vaciar}>
-        Vaciar carrito
-      </Boton>
-    </MarcadorPantalla>
+    <div className="contenedor compra">
+      <IndicadorPasos actual={2} />
+      <h1 className="pagina__titulo">Tu carrito</h1>
+
+      <div className="compra__columnas">
+        <section className="compra__panel" aria-labelledby="carrito-lista">
+          <h2 id="carrito-lista" className="sr-only">
+            Boletos en el carrito
+          </h2>
+          <ul>
+            {carrito.items.map((item) => (
+              <ItemCarrito key={item.clave} item={item} onCambiarCantidad={carrito.cambiarCantidad} onQuitar={carrito.quitar} />
+            ))}
+          </ul>
+          <Boton variante="texto" onClick={() => irA('inicio')}>
+            + Agregar boletos de otro evento
+          </Boton>
+        </section>
+
+        <ResumenCompra subtotal={carrito.subtotal} cargoServicio={carrito.cargoServicio} total={carrito.total}>
+          <Boton bloque onClick={() => irA('resumen')}>
+            Continuar
+          </Boton>
+          <Boton variante="texto" onClick={carrito.vaciar}>
+            Vaciar carrito
+          </Boton>
+        </ResumenCompra>
+      </div>
+    </div>
   );
 }

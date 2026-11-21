@@ -1,0 +1,65 @@
+.tarjeta-boleto {
+  position: relative;
+  display: flex;
+  gap: var(--espacio-2);
+  align-items: center;
+  height: 100%;
+  padding: var(--espacio-2);
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-left: 6px solid var(--primario);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.tarjeta-boleto:focus-within {
+  outline: 3px solid var(--secundario);
+  outline-offset: 2px;
+}
+
+.tarjeta-boleto--pasado {
+  border-left-color: var(--borde-fuerte);
+}
+
+.tarjeta-boleto--pasado .tarjeta-boleto__qr {
+  opacity: 0.5;
+}
+
+.tarjeta-boleto__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.tarjeta-boleto__titulo {
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-base);
+  font-weight: 600;
+}
+
+.tarjeta-boleto__enlace {
+  color: var(--texto-principal);
+}
+
+/* Toda la tarjeta es clicable */
+.tarjeta-boleto__enlace::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.tarjeta-boleto__enlace:focus-visible {
+  outline: none;
+}
+
+.tarjeta-boleto__dato {
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+}
+
+.tarjeta-boleto__codigo {
+  font-family: ui-monospace, monospace;
+  color: var(--texto-principal);
+}
