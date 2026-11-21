@@ -2,7 +2,6 @@
 
 Implementación en React del MVP de **Butaka**, una plataforma de venta y gestión de boletos para conciertos, teatro y deportes en El Salvador. Segunda entrega del proyecto: traslada el prototipo de Figma a una aplicación funcional con datos simulados y persistencia en el navegador.
 
-> **Pendiente:** completar las secciones marcadas con ✏️ antes de la entrega.
 
 ## Equipo
 
@@ -134,7 +133,7 @@ Ver [docs/cuenta-y-compra.md](docs/cuenta-y-compra.md).
 | Vista actual y parámetros | `App.jsx` (`useState`) | Todas las pantallas, vía `irA` | Historial del navegador (botón Atrás y recarga) |
 | Sesión | `useSesion()` en `App.jsx` | Encabezado, panel, pantallas protegidas | `localStorage` → `butaka:sesion` |
 | Carrito | `useCarrito()` en `App.jsx` | Encabezado, flujo de compra | `localStorage` → `butaka:carrito` |
-| Órdenes y boletos | ✏️ | Mis boletos, boleto | `localStorage` → `butaka:ordenes` |
+| Órdenes y boletos | `useOrdenes()` | Mis boletos, boleto | `localStorage` → `butaka:ordenes` |
 | Preferencias | `usePreferencias()` | Listado de eventos | `localStorage` → `butaka:preferencias` |
 | Eventos del panel | `useEventosAdmin()` | Panel, inventario, reportes y catálogo del cliente | `localStorage` → `butaka:admin-eventos` |
 | Usuarios del panel | `useUsuariosAdmin()` | Pantallas de usuarios | `localStorage` → `butaka:admin-usuarios` |
@@ -162,7 +161,34 @@ Todos los datos son ficticios: los correos usan el dominio de ejemplo `correo.co
 
 ## Capturas
 
-✏️ Agregar las capturas de `docs/capturas/` en los tres breakpoints (375, 768 y 1440 px).
+Hay 72 capturas en `docs/capturas/`: 24 pantallas en 375 px (móvil), 768 px (tablet) y 1440 px (escritorio). Ninguna tiene scroll horizontal en esos anchos.
+
+| Pantalla | Móvil | Tablet | Escritorio |
+|---|---|---|---|
+| Inicio | [375 px](docs/capturas/eddie/inicio-375.png) | [768 px](docs/capturas/eddie/inicio-768.png) | [1440 px](docs/capturas/eddie/inicio-1440.png) |
+| Resultados de búsqueda | [375 px](docs/capturas/eddie/resultados-375.png) | [768 px](docs/capturas/eddie/resultados-768.png) | [1440 px](docs/capturas/eddie/resultados-1440.png) |
+| Sin resultados | [375 px](docs/capturas/eddie/sin-resultados-375.png) | [768 px](docs/capturas/eddie/sin-resultados-768.png) | [1440 px](docs/capturas/eddie/sin-resultados-1440.png) |
+| Detalle del evento | [375 px](docs/capturas/eddie/detalle-375.png) | [768 px](docs/capturas/eddie/detalle-768.png) | [1440 px](docs/capturas/eddie/detalle-1440.png) |
+| Inicio de sesión | [375 px](docs/capturas/gabriel/login-375.png) | [768 px](docs/capturas/gabriel/login-768.png) | [1440 px](docs/capturas/gabriel/login-1440.png) |
+| Registro | [375 px](docs/capturas/gabriel/registro-375.png) | [768 px](docs/capturas/gabriel/registro-768.png) | [1440 px](docs/capturas/gabriel/registro-1440.png) |
+| Recuperar contraseña | [375 px](docs/capturas/gabriel/recuperar-375.png) | [768 px](docs/capturas/gabriel/recuperar-768.png) | [1440 px](docs/capturas/gabriel/recuperar-1440.png) |
+| Perfil | [375 px](docs/capturas/gabriel/perfil-375.png) | [768 px](docs/capturas/gabriel/perfil-768.png) | [1440 px](docs/capturas/gabriel/perfil-1440.png) |
+| Selección de zona y cantidad | [375 px](docs/capturas/gabriel/seleccion-375.png) | [768 px](docs/capturas/gabriel/seleccion-768.png) | [1440 px](docs/capturas/gabriel/seleccion-1440.png) |
+| Carrito | [375 px](docs/capturas/gabriel/carrito-375.png) | [768 px](docs/capturas/gabriel/carrito-768.png) | [1440 px](docs/capturas/gabriel/carrito-1440.png) |
+| Resumen de compra | [375 px](docs/capturas/gabriel/resumen-375.png) | [768 px](docs/capturas/gabriel/resumen-768.png) | [1440 px](docs/capturas/gabriel/resumen-1440.png) |
+| Pago | [375 px](docs/capturas/gabriel/pago-375.png) | [768 px](docs/capturas/gabriel/pago-768.png) | [1440 px](docs/capturas/gabriel/pago-1440.png) |
+| Pago aprobado | [375 px](docs/capturas/gabriel/resultado-aprobado-375.png) | [768 px](docs/capturas/gabriel/resultado-aprobado-768.png) | [1440 px](docs/capturas/gabriel/resultado-aprobado-1440.png) |
+| Pago rechazado | [375 px](docs/capturas/gabriel/resultado-rechazado-375.png) | [768 px](docs/capturas/gabriel/resultado-rechazado-768.png) | [1440 px](docs/capturas/gabriel/resultado-rechazado-1440.png) |
+| Mis boletos | [375 px](docs/capturas/gabriel/mis-boletos-375.png) | [768 px](docs/capturas/gabriel/mis-boletos-768.png) | [1440 px](docs/capturas/gabriel/mis-boletos-1440.png) |
+| Boleto con código QR | [375 px](docs/capturas/gabriel/boleto-375.png) | [768 px](docs/capturas/gabriel/boleto-768.png) | [1440 px](docs/capturas/gabriel/boleto-1440.png) |
+| Dashboard | [375 px](docs/capturas/eddie/dashboard-375.png) | [768 px](docs/capturas/eddie/dashboard-768.png) | [1440 px](docs/capturas/eddie/dashboard-1440.png) |
+| Eventos (panel) | [375 px](docs/capturas/eddie/eventos-375.png) | [768 px](docs/capturas/eddie/eventos-768.png) | [1440 px](docs/capturas/eddie/eventos-1440.png) |
+| Crear evento | [375 px](docs/capturas/eddie/crear-evento-375.png) | [768 px](docs/capturas/eddie/crear-evento-768.png) | [1440 px](docs/capturas/eddie/crear-evento-1440.png) |
+| Modal de eliminar evento | [375 px](docs/capturas/eddie/eliminar-evento-375.png) | [768 px](docs/capturas/eddie/eliminar-evento-768.png) | [1440 px](docs/capturas/eddie/eliminar-evento-1440.png) |
+| Inventario y precios | [375 px](docs/capturas/eddie/inventario-375.png) | [768 px](docs/capturas/eddie/inventario-768.png) | [1440 px](docs/capturas/eddie/inventario-1440.png) |
+| Usuarios | [375 px](docs/capturas/eddie/usuarios-375.png) | [768 px](docs/capturas/eddie/usuarios-768.png) | [1440 px](docs/capturas/eddie/usuarios-1440.png) |
+| Crear usuario | [375 px](docs/capturas/eddie/crear-usuario-375.png) | [768 px](docs/capturas/eddie/crear-usuario-768.png) | [1440 px](docs/capturas/eddie/crear-usuario-1440.png) |
+| Reportes | [375 px](docs/capturas/eddie/reportes-375.png) | [768 px](docs/capturas/eddie/reportes-768.png) | [1440 px](docs/capturas/eddie/reportes-1440.png) |
 
 ## Limitaciones y decisiones de diseño
 
@@ -174,4 +200,4 @@ Todos los datos son ficticios: los correos usan el dominio de ejemplo `correo.co
 - **Los usuarios no se borran:** se desactivan, y un administrador no puede desactivar su propia cuenta.
 - **Inventario:** una zona con boletos vendidos no se puede eliminar, y su capacidad no puede bajar de lo ya vendido.
 - **Reportes:** las métricas se calculan a partir de los eventos; la evolución mensual es estática. "Descargar reporte" genera un CSV en el navegador.
-- ✏️ Agregar las decisiones de los módulos de cuenta y compra.
+- **Cuenta y compra:** el pago es simulado y solo se guardan el titular y los últimos 4 dígitos de la tarjeta; el código QR de los boletos es simulado; una compra no descuenta boletos del inventario, pero antes de pagar se revisa la disponibilidad. El detalle está en [docs/cuenta-y-compra.md](docs/cuenta-y-compra.md).
