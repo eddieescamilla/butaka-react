@@ -1,0 +1,58 @@
+/* DUEÑO: Gabriel. Estilos compartidos por las pantallas de cuenta. */
+
+.formulario-cuenta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.formulario-cuenta__fila {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-2);
+}
+
+@media (min-width: 480px) {
+  .formulario-cuenta__fila {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.formulario-cuenta__enlace {
+  align-self: flex-end;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--secundario);
+}
+
+.formulario-cuenta__casilla {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-1);
+  font-size: var(--texto-sm);
+}
+
+.formulario-cuenta__casilla input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  accent-color: var(--primario);
+}
+
+.formulario-cuenta__demo {
+  padding: var(--espacio-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+  background-color: var(--fondo);
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-boton);
+}
+
+.formulario-cuenta__demo ul {
+  margin-top: 0.25rem;
+}
+
+.formulario-cuenta__demo code {
+  font-size: var(--texto-xs);
+  color: var(--texto-principal);
+}
