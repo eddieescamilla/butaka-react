@@ -153,3 +153,11 @@
     flex-direction: row;
   }
 }
+
+/* Reportes: periodo, fechas, evento y categoría */
+@media (min-width: 768px) {
+  .admin-filtros--reportes {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    max-width: none;
+  }
+}
