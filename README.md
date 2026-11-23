@@ -1,19 +1,35 @@
 # Butaka: Tu lugar te espera
 
-Implementación en React del MVP de **Butaka**, una plataforma de venta y gestión de boletos para conciertos, teatro y deportes en El Salvador. Segunda entrega del proyecto: traslada el prototipo de Figma a una aplicación funcional con datos simulados y persistencia en el navegador.
+PWA en React del MVP de **Butaka**, una plataforma de venta y gestión de boletos para conciertos, teatro y deportes en El Salvador. Es la **entrega final** del proyecto: la app se navega con React Router, comparte estado con Context y `useReducer`, consume una API falsa, tiene panel de administración con CRUD y reportes, genera boletos con código QR, se instala como aplicación y funciona sin conexión.
 
+**App publicada:** https://eddieescamilla.github.io/butaka-react/
 
 ## Equipo
 
 | Integrante | Carné | GitHub | Módulos |
 |---|---|---|---|
-| José Edgardo Rosales Escamilla | 00129426 | [@eddieescamilla](https://github.com/eddieescamilla) | Eventos · Inventario y precios · Panel de administración · Reportes |
-| Gabriel Enrique Mejía Castillo | 00063924 | [@MMejiaC05](https://github.com/MMejiaC05) | Autenticación · Proceso de compra · Pagos · Boletos electrónicos |
+| José Edgardo Rosales Escamilla | 00129426 | [@eddieescamilla](https://github.com/eddieescamilla) | 2. Eventos · 3. Inventario y precios · 7. Panel de administración · 8. Reportes · Router, API falsa y GitHub Pages |
+| Gabriel Enrique Mejía Castillo | 00063924 | [@MMejiaC05](https://github.com/MMejiaC05) | 1. Usuarios y autenticación · 4. Compra · 5. Pagos · 6. Boletos con QR · PWA |
 
 **Materia:** Programación Orientada al Usuario · **Docente:** Ing. Néstor Aldana · **Universidad Centroamericana "José Simeón Cañas" (UCA)**
 
 - Prototipo en Figma: [Proyecto Butaka](https://www.figma.com/design/k1uoWzu1qftWTfvz2IlBuv/Proyecto-Butaka?node-id=3-2)
 - Primera entrega (HTML y CSS): [butaka-project](https://github.com/eddieescamilla/butaka-project)
+
+## Alcance
+
+Los **ocho módulos del MVP** están implementados:
+
+| Módulo | Qué incluye |
+|---|---|
+| 1. Usuarios y autenticación | Login, registro, recuperación simulada, perfil persistente, roles de cliente, organizador y administrador, rutas protegidas |
+| 2. Gestión de eventos | Listado, búsqueda en la URL, filtro por categoría, orden, detalle y estados de venta desde la API falsa |
+| 3. Inventario y precios | Zonas, precios y disponibilidad; edición de zonas en el panel; cada compra descuenta del inventario |
+| 4. Proceso de compra | Carrito global con Context y `useReducer`, flujo de 4 pasos, resumen y persistencia |
+| 5. Sistema de pagos | Pago simulado, orden en estado `pagada`, rechazo con reintento y prevención de doble envío |
+| 6. Boletos electrónicos | QR real generado en el cliente, verificación del QR, lista de boletos y correo de confirmación simulado |
+| 7. Panel de administración | Dashboard, CRUD de eventos, inventario y precios, usuarios y acceso por rol |
+| 8. Reportes y analítica | Ingresos, boletos, reembolsos y gráficos calculados a partir de las órdenes, por evento y por periodo, con descarga CSV |
 
 ## Instalación y ejecución
 
@@ -23,181 +39,174 @@ Requisitos: Node.js 20.19 o superior (o 22.12 en adelante) y npm.
 git clone https://github.com/eddieescamilla/butaka-react.git
 cd butaka-react
 npm install
-npm run dev
+npm run dev        # http://localhost:5173
 ```
 
-Abre la dirección que muestra la terminal (normalmente `http://localhost:5173`).
-
-Otros comandos: `npm run build` genera la versión de producción en `dist/`, y `npm run preview` la sirve localmente.
-
-### Usuarios de prueba
-
-Contraseña de todos: `Butaka2026`
-
-| Correo | Rol |
+| Comando | Qué hace |
 |---|---|
-| `ana.lopez@correo.com` | Cliente |
-| `carlos.m@correo.com` | Administrador |
-| `sofia.h@correo.com` | Organizador |
+| `npm run dev` | Servidor de desarrollo (sin service worker) |
+| `npm run build` | Compila en `dist/`, genera el service worker y crea `404.html` y `.nojekyll` |
+| `npm run preview` | Sirve `dist/` en `http://localhost:4173/butaka-react/` con la PWA activa |
+| `npm run datos` | Regenera `public/api/ordenes.json` a partir de los eventos y usuarios |
+
+## Credenciales de prueba y roles
+
+Contraseña de todas las cuentas: `Butaka2026`. Son cuentas ficticias (dominio `correo.com`): no hay datos personales reales.
+
+| Correo | Rol | Puede ver |
+|---|---|---|
+| `ana.lopez@correo.com` | Cliente | Sitio, compra, Mis boletos y perfil (ya tiene boletos comprados) |
+| `sofia.h@correo.com` | Organizador | Lo anterior más el panel: dashboard, eventos e inventario **de sus propios eventos** |
+| `carlos.m@correo.com` | Administrador | Todo el panel, incluidos **Usuarios** y **Reportes** |
+
+Tarjetas de prueba: `4242 4242 4242 4242` (aprobada) y `4000 0000 0000 0002` (rechazada), con cualquier fecha futura y CVV de 3 dígitos.
 
 ## Tecnologías
 
-- React 19 y Vite 8, con JavaScript y JSX.
-- CSS propio por componente, con variables del manual de marca y clases BEM en español.
-- Sin backend: datos simulados en `src/data/` y operaciones asíncronas simuladas con promesas.
-- Persistencia de sesión, carrito, órdenes y preferencias en `localStorage`.
-- Navegación con estado de vista en `App.jsx` (React Router no se exige en esta entrega).
+- React 19, Vite 8, JavaScript y JSX.
+- React Router 8 en modo datos (`createBrowserRouter` y `RouterProvider`) con carga diferida de rutas.
+- Context + `useReducer` para sesión, carrito y preferencias.
+- `vite-plugin-pwa` (Workbox) para el manifest y el service worker.
+- `qrcode` para generar los códigos QR en el navegador.
+- CSS propio por componente, variables del manual de marca y BEM en español.
+- Sin backend, sin base de datos, sin pagos reales y sin envío real de correos.
 
-## Estructura del proyecto
+## Arquitectura de carpetas
 
 ```
+public/
+├── api/               API falsa: eventos.json, usuarios.json, ordenes.json
+├── iconos/            Íconos de la PWA (192, 512 y maskable)
+└── img/               Fotos de los eventos
 src/
-├── App.jsx            Estado global: navegación, sesión y carrito
-├── rutas.js           Registro de todas las vistas
-├── main.jsx           Punto de entrada
-├── styles/            tokens.css (manual de marca) y base.css
-├── components/        Componentes base del Design System (compartidos)
-├── layout/            Encabezado, pie y barra lateral del panel
+├── main.jsx           RouterProvider
+├── app/               router.jsx, Raiz.jsx (proveedores), RutaProtegida, modulos.js, errores
+├── api/               Capa de acceso a datos: cliente.js, eventos.js, usuarios.js, ordenes.js
+├── layout/            LayoutCliente y LayoutAdmin con <Outlet />, encabezado y barra lateral
 ├── features/
-│   ├── eventos/       Inicio, búsqueda y detalle de eventos
-│   ├── admin/         Dashboard, eventos, inventario, usuarios y reportes
-│   ├── cuenta/        Login, registro, recuperación y perfil
-│   └── compra/        Selección, carrito, pago, confirmación y boletos
-├── pages/             Pantallas compartidas (404 y sin permiso)
-├── data/              Datos simulados
-├── servicios/         "API" simulada que devuelve promesas
-├── hooks/             useLocalStorage y usePeticion
-└── utils/             Formatos, cálculos de eventos y simulación de peticiones
+│   ├── eventos/       Inicio, listado, detalle y PreferenciasContext (Eddie)
+│   ├── admin/         Dashboard, CRUD, inventario, usuarios y reportes (Eddie)
+│   ├── cuenta/        Login, registro, perfil y SesionContext (Gabriel)
+│   ├── compra/        Carrito, checkout, pago, boletos, QR y CarritoContext (Gabriel)
+│   └── pwa/           Avisos de actualización, sin conexión e instalación (Gabriel)
+├── components/        Design System compartido: Boton, CampoTexto, Modal, Aviso, Estados…
+├── hooks/             usePeticion (carga, error, cancelación) y useLocalStorage
+├── pages/             404 y Sin permiso
+├── data/              Constantes: categorías, estados, roles, cargo por servicio
+├── styles/            tokens.css (manual de marca) y base.css
+└── utils/             Formatos y cálculos de eventos
+scripts/               generar-datos.mjs y postbuild.mjs
+.github/workflows/     deploy.yml (GitHub Pages)
 ```
 
-Las reglas de trabajo del equipo están en [CONTRIBUIR.md](CONTRIBUIR.md).
+Cada carpeta de `features/` registra sus rutas, su Context y sus componentes globales en un archivo `modulo.jsx`; el router los descubre con `import.meta.glob`. Así cada integrante trabajó solo en sus carpetas, con sus ramas y pull requests, sin conflictos. El detalle está en [docs/arquitectura.md](docs/arquitectura.md) y las reglas del equipo en [CONTRIBUIR.md](CONTRIBUIR.md).
 
-## Inventario de componentes
+## Mapa de rutas
 
-### Componentes base (Design System)
-
-| Componente | Uso | Props principales |
+| Ruta | Contenido | Acceso |
 |---|---|---|
-| `Logo` | Logotipo de Butaka | `tamano` |
-| `Boton` | Acciones primarias, secundarias, de peligro y de texto | `variante`, `tamano`, `cargando`, `bloque` |
-| `Etiqueta` | Píldoras de categoría y de estado | `variante` |
-| `CampoTexto` | Input, select o textarea con label, ayuda y error | `id`, `etiqueta`, `error`, `ayuda`, `opciones`, `multilinea` |
-| `Modal` | Diálogo accesible (confirmaciones) | `abierto`, `titulo`, `onCerrar` |
-| `Aviso` | Mensaje de confirmación tipo toast | `tipo`, `mensaje`, `onCerrar`, `duracion` |
-| `EstadoCarga` | Estado de carga | `mensaje` |
-| `EstadoVacio` | Estado sin resultados | `titulo`, `mensaje` |
-| `EstadoError` | Estado de error con reintento | `titulo`, `mensaje`, `onReintentar` |
-| `EnlaceVista` | Enlace entre vistas sin recargar | `vista`, `params`, `irA`, `activo` |
+| `/` | Inicio y próximos eventos | Público |
+| `/eventos?q=` | Listado y búsqueda | Público |
+| `/eventos/:id` | Detalle del evento | Público |
+| `/eventos/:id/boletos` | Zona y cantidad | Público |
+| `/carrito` | Carrito | Público |
+| `/checkout` | Resumen de compra (pide sesión para pagar) | Público |
+| `/checkout/pago` · `/checkout/resultado` | Pago simulado y resultado | Autenticado |
+| `/boletos` · `/boletos/:codigo` | Boletos del usuario y boleto con QR | Autenticado |
+| `/verificar/:codigo?f=` | Verificación del QR | Público |
+| `/login` · `/registro` · `/recuperar` | Cuenta | Público |
+| `/perfil` | Perfil | Autenticado |
+| `/admin` | Dashboard | Administrador u organizador |
+| `/admin/eventos` · `/nuevo` · `/:id/editar` | CRUD de eventos | Administrador u organizador |
+| `/admin/inventario?evento=` | Inventario y precios | Administrador u organizador |
+| `/admin/usuarios` · `/nuevo` · `/:id/editar` | Usuarios | Administrador |
+| `/admin/reportes?periodo=&evento=` | Reportes | Administrador |
+| `*` | 404 | Público |
 
-### Layout
+Sin sesión, una ruta protegida redirige a `/login` y, al iniciar sesión, regresa a la ruta pedida. Un rol sin permiso ve "Sin permiso". Las pantallas del panel y de boletos se descargan solo cuando se visitan (`lazy`).
 
-| Componente | Uso |
-|---|---|
-| `LayoutCliente`, `Encabezado`, `PiePagina` | Estructura del sitio del cliente |
-| `LayoutAdmin`, `BarraLateralAdmin` | Estructura del panel de administración |
+## Estado global
 
-### Eventos (Eddie)
-
-| Componente | Uso | Props principales |
-|---|---|---|
-| `CatalogoEventos` | Listado con filtro por categoría, orden y estados de carga, error y vacío. Lo usan Inicio y Resultados | `busqueda`, `irA`, `titulo` |
-| `FiltroCategorias` | Píldoras para filtrar por categoría (`aria-pressed`) | `valor`, `onCambiar` |
-| `TarjetaEvento` | Tarjeta de evento con imagen, categoría, fecha, lugar y precio desde | `evento`, `irA` |
-| `ZonasEvento` | Zonas del evento con precio, barra de ocupación y disponibilidad | `zonas` |
-| `InicioPage`, `ResultadosPage`, `DetalleEventoPage` | Pantallas del módulo de eventos | `params`, `irA` |
-
-### Panel de administración, inventario y reportes (Eddie)
-
-| Componente | Uso | Props principales |
-|---|---|---|
-| `EncabezadoAdmin` | Título, subtítulo, aviso de confirmación y acción principal de cada pantalla | `titulo`, `subtitulo`, `accion`, `aviso` |
-| `TablaDatos` | Tabla reutilizable; en móvil cada fila se muestra como tarjeta | `titulo`, `columnas`, `filas` |
-| `TarjetaMetrica` | Indicador del dashboard y de los reportes | `etiqueta`, `valor`, `detalle` |
-| `GraficoBarras` | Gráfico de barras con CSS y tabla alternativa para lectores de pantalla | `titulo`, `datos`, `formato` |
-| `ModalConfirmacion` | Confirmación de acciones críticas (eliminar) | `abierto`, `mensaje`, `procesando`, `onConfirmar` |
-| `FormularioEvento` | Crear o editar un evento, con zonas y validación | `inicial`, `esNuevo`, `onGuardar` |
-| `FormularioZona` | Agregar o editar una zona dentro de un modal | `zona`, `todas`, `onGuardar` |
-| `FormularioUsuario` | Crear o editar un usuario, con validación | `inicial`, `otrosUsuarios`, `onGuardar` |
-| `DashboardPage`, `EventosAdminPage`, `CrearEventoPage`, `InventarioPage`, `UsuariosPage`, `CrearUsuarioPage`, `ReportesPage` | Pantallas del panel | `params`, `irA`, `sesion` |
-
-Hooks propios: `usePreferencias` (categoría y orden del listado), `useEventosAdmin`, `useUsuariosAdmin` y `useAviso`.
-
-### Cuenta, compra y boletos (Gabriel)
-
-Ver [docs/cuenta-y-compra.md](docs/cuenta-y-compra.md).
-
-## Mapa de estado y persistencia
-
-| Estado | Dónde vive | Quién lo usa | Persistencia |
+| Estado | Context | Acciones (`useReducer`) | Persistencia |
 |---|---|---|---|
-| Vista actual y parámetros | `App.jsx` (`useState`) | Todas las pantallas, vía `irA` | Historial del navegador (botón Atrás y recarga) |
-| Sesión | `useSesion()` en `App.jsx` | Encabezado, panel, pantallas protegidas | `localStorage` → `butaka:sesion` |
-| Carrito | `useCarrito()` en `App.jsx` | Encabezado, flujo de compra | `localStorage` → `butaka:carrito` |
-| Órdenes y boletos | `useOrdenes()` | Mis boletos, boleto | `localStorage` → `butaka:ordenes` |
-| Preferencias | `usePreferencias()` | Listado de eventos | `localStorage` → `butaka:preferencias` |
-| Eventos del panel | `useEventosAdmin()` | Panel, inventario, reportes y catálogo del cliente | `localStorage` → `butaka:admin-eventos` |
-| Usuarios del panel | `useUsuariosAdmin()` | Pantallas de usuarios | `localStorage` → `butaka:admin-usuarios` |
-| Datos de cada pantalla | `usePeticion()` en cada pantalla | La pantalla que los pide | No se guardan |
+| Sesión | `SesionContext` | iniciar, cerrar, actualizar, sincronizar | `butaka:sesion` |
+| Carrito | `CarritoContext` | agregar, cambiarCantidad, quitar, vaciar, sincronizar | `butaka:carrito` |
+| Preferencias | `PreferenciasContext` | cambiarCategoria, cambiarOrden, restablecer | `butaka:preferencias` |
 
-Valores derivados que se calculan y no se guardan como estado: `totalItems`, `subtotal`, `cargoServicio` y `total` del carrito; `haySesion` y `esAdmin` de la sesión; disponibilidad por zona, "precio desde" y estado de venta de cada evento; las métricas de los reportes y la lista de próximos eventos del dashboard.
+Los consumidores usan `useSesion()`, `useCarrito()` y `usePreferencias()`, sin prop drilling. Los totales del carrito, `haySesion`, `esAdmin` y las métricas de los reportes son valores derivados: se calculan, no se guardan. El panel usa además un `useReducer` local (`useListaRemota`) para cargar y modificar listas de la API.
 
-Los eventos que crea, edita o elimina el panel se guardan en `butaka:admin-eventos`, y `src/servicios/eventos.js` lee esa misma clave. Por eso un evento creado en el panel aparece en el sitio del cliente.
+## API falsa
 
-El detalle del flujo de estado está en [docs/arquitectura.md](docs/arquitectura.md).
+Se eligió la **API falsa local** (la opción preferida). `src/api/` es la única capa que toca los datos; los componentes nunca usan `fetch` ni `localStorage` directamente.
 
-## Datos simulados
+- **Lectura:** `fetch` a `public/api/<colección>.json` con un retraso simulado de 450 ms y `AbortSignal`.
+- **Escritura:** la colección modificada se guarda completa en `localStorage` (`butaka:api:<colección>`) y desde ahí se lee. Latencia de 700 ms.
+- **Errores:** `ErrorApi` con mensaje claro y código (404, 409…). Sin conexión y sin datos guardados, el mensaje lo explica.
+- **Cancelación:** `usePeticion` y `useListaRemota` crean un `AbortController` y cancelan la petición al cambiar los filtros o al salir de la pantalla.
+- Estados de **carga, error y vacío** en todas las pantallas con datos.
 
-| Archivo | Contenido |
+| Colección | Datos de prueba | Operaciones |
+|---|---|---|
+| `eventos.json` | 12 eventos en 4 categorías, con 3 zonas cada uno (precio, capacidad, vendidos) y estado | Listar, buscar, obtener, crear, editar, eliminar, guardar y eliminar zonas, registrar venta |
+| `usuarios.json` | 20 cuentas ficticias con los 3 roles | Autenticar, registrar, listar, crear, editar, activar o desactivar |
+| `ordenes.json` | 538 órdenes de junio a noviembre de 2026, en línea y de taquilla, más 9 reembolsadas | Listar, obtener, crear (recalcula montos y descuenta inventario), boletos, verificar QR |
+
+`scripts/generar-datos.mjs` genera las órdenes para que la suma de boletos de cada zona sea igual a sus `vendidos`: inventario y reportes siempre cuadran. En el dashboard, el administrador puede **restablecer los datos de demostración**.
+
+## PWA y estrategias de caché
+
+| Recurso | Estrategia |
 |---|---|
-| `data/eventos.js` | 12 eventos en 4 categorías, cada uno con 3 zonas (precio, capacidad y vendidos) y un estado: en venta, pocos boletos, agotado, cancelado o finalizado |
-| `data/usuarios.js` | 6 usuarios ficticios con roles de cliente, organizador y administrador |
-| `data/categorias.js` | Categorías, estados, roles, máximo de boletos por zona y cargo por servicio |
-| `data/ordenes.js` | Órdenes de ejemplo con sus boletos |
-| `data/reportes.js` | Métricas y ventas por mes para el dashboard y los reportes |
+| App shell (HTML, JS, CSS, íconos) | Precache |
+| Rutas de la SPA sin conexión | `navigateFallback` a `index.html` |
+| API (`/api/*.json`) | NetworkFirst (3 s) |
+| Imágenes | CacheFirst |
+| Google Fonts | StaleWhileRevalidate y CacheFirst |
 
-Las funciones de `servicios/eventos.js` devuelven los datos después de un retraso, para mostrar los estados de carga. La búsqueda falla al azar en el 10 % de los intentos, para demostrar el estado de error con "Reintentar".
+Manifest completo con íconos de 192, 512 y maskable; aviso de actualización ("Actualizar"); aviso de sin conexión; botón "Instalar Butaka". Detalle y pasos para verificarlo en DevTools: [docs/pwa.md](docs/pwa.md).
 
-Todos los datos son ficticios: los correos usan el dominio de ejemplo `correo.com`.
+## Despliegue en GitHub Pages
+
+1. `vite.config.js` usa `base: '/butaka-react/'` en `build` y `preview` (o `VITE_BASE`).
+2. `createBrowserRouter` recibe `basename: import.meta.env.BASE_URL`.
+3. `scripts/postbuild.mjs` copia `dist/index.html` a `dist/404.html` (así funcionan las rutas profundas al recargar) y crea `.nojekyll`.
+4. `.github/workflows/deploy.yml` compila y publica `dist/` en cada push a `main`.
+5. Configuración única en GitHub: **Settings → Pages → Source: GitHub Actions**.
 
 ## Capturas
 
-Hay 72 capturas en `docs/capturas/`: 24 pantallas en 375 px (móvil), 768 px (tablet) y 1440 px (escritorio). Ninguna tiene scroll horizontal en esos anchos.
+En `docs/capturas/`, cada pantalla en 375 px (móvil), 768 px (tablet) y 1440 px (escritorio).
 
 | Pantalla | Móvil | Tablet | Escritorio |
 |---|---|---|---|
-| Inicio | [375 px](docs/capturas/eddie/inicio-375.png) | [768 px](docs/capturas/eddie/inicio-768.png) | [1440 px](docs/capturas/eddie/inicio-1440.png) |
-| Resultados de búsqueda | [375 px](docs/capturas/eddie/resultados-375.png) | [768 px](docs/capturas/eddie/resultados-768.png) | [1440 px](docs/capturas/eddie/resultados-1440.png) |
-| Sin resultados | [375 px](docs/capturas/eddie/sin-resultados-375.png) | [768 px](docs/capturas/eddie/sin-resultados-768.png) | [1440 px](docs/capturas/eddie/sin-resultados-1440.png) |
-| Detalle del evento | [375 px](docs/capturas/eddie/detalle-375.png) | [768 px](docs/capturas/eddie/detalle-768.png) | [1440 px](docs/capturas/eddie/detalle-1440.png) |
-| Inicio de sesión | [375 px](docs/capturas/gabriel/login-375.png) | [768 px](docs/capturas/gabriel/login-768.png) | [1440 px](docs/capturas/gabriel/login-1440.png) |
-| Registro | [375 px](docs/capturas/gabriel/registro-375.png) | [768 px](docs/capturas/gabriel/registro-768.png) | [1440 px](docs/capturas/gabriel/registro-1440.png) |
-| Recuperar contraseña | [375 px](docs/capturas/gabriel/recuperar-375.png) | [768 px](docs/capturas/gabriel/recuperar-768.png) | [1440 px](docs/capturas/gabriel/recuperar-1440.png) |
-| Perfil | [375 px](docs/capturas/gabriel/perfil-375.png) | [768 px](docs/capturas/gabriel/perfil-768.png) | [1440 px](docs/capturas/gabriel/perfil-1440.png) |
-| Selección de zona y cantidad | [375 px](docs/capturas/gabriel/seleccion-375.png) | [768 px](docs/capturas/gabriel/seleccion-768.png) | [1440 px](docs/capturas/gabriel/seleccion-1440.png) |
-| Carrito | [375 px](docs/capturas/gabriel/carrito-375.png) | [768 px](docs/capturas/gabriel/carrito-768.png) | [1440 px](docs/capturas/gabriel/carrito-1440.png) |
-| Resumen de compra | [375 px](docs/capturas/gabriel/resumen-375.png) | [768 px](docs/capturas/gabriel/resumen-768.png) | [1440 px](docs/capturas/gabriel/resumen-1440.png) |
-| Pago | [375 px](docs/capturas/gabriel/pago-375.png) | [768 px](docs/capturas/gabriel/pago-768.png) | [1440 px](docs/capturas/gabriel/pago-1440.png) |
-| Pago aprobado | [375 px](docs/capturas/gabriel/resultado-aprobado-375.png) | [768 px](docs/capturas/gabriel/resultado-aprobado-768.png) | [1440 px](docs/capturas/gabriel/resultado-aprobado-1440.png) |
-| Pago rechazado | [375 px](docs/capturas/gabriel/resultado-rechazado-375.png) | [768 px](docs/capturas/gabriel/resultado-rechazado-768.png) | [1440 px](docs/capturas/gabriel/resultado-rechazado-1440.png) |
-| Mis boletos | [375 px](docs/capturas/gabriel/mis-boletos-375.png) | [768 px](docs/capturas/gabriel/mis-boletos-768.png) | [1440 px](docs/capturas/gabriel/mis-boletos-1440.png) |
-| Boleto con código QR | [375 px](docs/capturas/gabriel/boleto-375.png) | [768 px](docs/capturas/gabriel/boleto-768.png) | [1440 px](docs/capturas/gabriel/boleto-1440.png) |
-| Dashboard | [375 px](docs/capturas/eddie/dashboard-375.png) | [768 px](docs/capturas/eddie/dashboard-768.png) | [1440 px](docs/capturas/eddie/dashboard-1440.png) |
-| Eventos (panel) | [375 px](docs/capturas/eddie/eventos-375.png) | [768 px](docs/capturas/eddie/eventos-768.png) | [1440 px](docs/capturas/eddie/eventos-1440.png) |
-| Crear evento | [375 px](docs/capturas/eddie/crear-evento-375.png) | [768 px](docs/capturas/eddie/crear-evento-768.png) | [1440 px](docs/capturas/eddie/crear-evento-1440.png) |
-| Modal de eliminar evento | [375 px](docs/capturas/eddie/eliminar-evento-375.png) | [768 px](docs/capturas/eddie/eliminar-evento-768.png) | [1440 px](docs/capturas/eddie/eliminar-evento-1440.png) |
-| Inventario y precios | [375 px](docs/capturas/eddie/inventario-375.png) | [768 px](docs/capturas/eddie/inventario-768.png) | [1440 px](docs/capturas/eddie/inventario-1440.png) |
-| Usuarios | [375 px](docs/capturas/eddie/usuarios-375.png) | [768 px](docs/capturas/eddie/usuarios-768.png) | [1440 px](docs/capturas/eddie/usuarios-1440.png) |
-| Crear usuario | [375 px](docs/capturas/eddie/crear-usuario-375.png) | [768 px](docs/capturas/eddie/crear-usuario-768.png) | [1440 px](docs/capturas/eddie/crear-usuario-1440.png) |
-| Reportes | [375 px](docs/capturas/eddie/reportes-375.png) | [768 px](docs/capturas/eddie/reportes-768.png) | [1440 px](docs/capturas/eddie/reportes-1440.png) |
+| Listado de eventos | [375](docs/capturas/eddie/listado-375.png) | [768](docs/capturas/eddie/listado-768.png) | [1440](docs/capturas/eddie/listado-1440.png) |
+| Detalle | [375](docs/capturas/eddie/detalle-375.png) | [768](docs/capturas/eddie/detalle-768.png) | [1440](docs/capturas/eddie/detalle-1440.png) |
+| Carrito | [375](docs/capturas/gabriel/carrito-375.png) | [768](docs/capturas/gabriel/carrito-768.png) | [1440](docs/capturas/gabriel/carrito-1440.png) |
+| Checkout (resumen) | [375](docs/capturas/gabriel/resumen-375.png) | [768](docs/capturas/gabriel/resumen-768.png) | [1440](docs/capturas/gabriel/resumen-1440.png) |
+| Pago | [375](docs/capturas/gabriel/pago-375.png) | [768](docs/capturas/gabriel/pago-768.png) | [1440](docs/capturas/gabriel/pago-1440.png) |
+| Pago aprobado y correo simulado | [375](docs/capturas/gabriel/resultado-aprobado-375.png) | [768](docs/capturas/gabriel/resultado-aprobado-768.png) | [1440](docs/capturas/gabriel/resultado-aprobado-1440.png) |
+| Boleto con QR | [375](docs/capturas/gabriel/boleto-375.png) | [768](docs/capturas/gabriel/boleto-768.png) | [1440](docs/capturas/gabriel/boleto-1440.png) |
+| Verificación del QR | [375](docs/capturas/gabriel/verificar-valido-375.png) | [768](docs/capturas/gabriel/verificar-valido-768.png) | [1440](docs/capturas/gabriel/verificar-valido-1440.png) |
+| Dashboard | [375](docs/capturas/eddie/dashboard-375.png) | [768](docs/capturas/eddie/dashboard-768.png) | [1440](docs/capturas/eddie/dashboard-1440.png) |
+| CRUD de eventos | [375](docs/capturas/eddie/eventos-375.png) | [768](docs/capturas/eddie/eventos-768.png) | [1440](docs/capturas/eddie/eventos-1440.png) |
+| Inventario y precios | [375](docs/capturas/eddie/inventario-375.png) | [768](docs/capturas/eddie/inventario-768.png) | [1440](docs/capturas/eddie/inventario-1440.png) |
+| Usuarios | [375](docs/capturas/eddie/usuarios-375.png) | [768](docs/capturas/eddie/usuarios-768.png) | [1440](docs/capturas/eddie/usuarios-1440.png) |
+| Reportes | [375](docs/capturas/eddie/reportes-375.png) | [768](docs/capturas/eddie/reportes-768.png) | [1440](docs/capturas/eddie/reportes-1440.png) |
+| Reporte de un evento | [375](docs/capturas/eddie/reportes-evento-375.png) | [768](docs/capturas/eddie/reportes-evento-768.png) | [1440](docs/capturas/eddie/reportes-evento-1440.png) |
+| Modo sin conexión | [375](docs/capturas/gabriel/offline-375.png) | [768](docs/capturas/gabriel/offline-768.png) | [1440](docs/capturas/gabriel/offline-1440.png) |
+| Manifest en DevTools | [captura](docs/capturas/gabriel/devtools-manifest.png) | | |
+| Service worker en DevTools | [captura](docs/capturas/gabriel/devtools-service-worker.png) | | |
 
-## Limitaciones y decisiones de diseño
+Hay más capturas (inicio, búsqueda, login, registro, perfil, crear evento y usuario, pago rechazado, Mis boletos) en las mismas carpetas.
 
-- **Sin backend:** la autenticación, los pagos y el envío de correos son simulados. La contraseña de prueba está en los datos simulados solo con fines de demostración.
-- **Navegación sin React Router:** la vista actual se guarda en el estado de `App.jsx` y se sincroniza con el historial del navegador, para que funcionen el botón Atrás y la recarga.
-- **Estado global sin Context:** la sesión y el carrito viven en `App.jsx` y se pasan por props. Context se incorpora en la tercera entrega.
-- **Color de advertencia:** se oscureció de `#F59E0B` a `#B45309` para cumplir el contraste mínimo cuando se usa como texto.
-- **Roles en el panel:** el administrador ve todo; el organizador ve y administra solo sus eventos, y no tiene acceso a Usuarios.
-- **Los usuarios no se borran:** se desactivan, y un administrador no puede desactivar su propia cuenta.
-- **Inventario:** una zona con boletos vendidos no se puede eliminar, y su capacidad no puede bajar de lo ya vendido.
-- **Reportes:** las métricas se calculan a partir de los eventos; la evolución mensual es estática. "Descargar reporte" genera un CSV en el navegador.
-- **Cuenta y compra:** el pago es simulado y solo se guardan el titular y los últimos 4 dígitos de la tarjeta; el código QR de los boletos es simulado; una compra no descuenta boletos del inventario, pero antes de pagar se revisa la disponibilidad. El detalle está en [docs/cuenta-y-compra.md](docs/cuenta-y-compra.md).
+## Accesibilidad
+
+HTML semántico, formularios con `<label>` y errores asociados con `aria-describedby`, navegación por teclado, foco visible, enlace "Saltar al contenido", foco en el contenido al cambiar de ruta, `aria-current` en la navegación, `aria-live` en avisos y estados, textos alternativos en imágenes y QR, y tablas alternativas en los gráficos.
+
+## Limitaciones
+
+- **Sin backend:** la autenticación, los pagos, el correo y todas las escrituras son simulados. Los cambios viven en el `localStorage` de cada navegador; otro dispositivo ve los datos de demostración.
+- **Contraseña de prueba visible** en `public/api/usuarios.json`, solo con fines de demostración.
+- **Verificación del QR académica:** la firma detecta códigos alterados, pero sin servidor no hay una clave secreta real ni control de boletos ya usados.
+- **Sin conexión** solo se ve lo que ya se visitó; para pagar se necesita conexión.
+- Las órdenes de taquilla son lotes simulados para que los reportes cuadren con el inventario; no generan boletos electrónicos.
