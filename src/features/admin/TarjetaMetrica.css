@@ -37,3 +37,7 @@
 .tarjeta-metrica__detalle--neutra {
   color: var(--texto-secundario);
 }
+
+.tarjeta-metrica__detalle--negativa {
+  color: var(--error);
+}
