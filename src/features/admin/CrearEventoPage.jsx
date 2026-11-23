@@ -1,25 +1,31 @@
 // DUEÑO: Eddie. Módulo 7: panel de administración. Crear o editar un evento.
-// Props: { params, irA, sesion }  ·  params.eventoId: si viene, se edita ese evento
+// Rutas: /admin/eventos/nuevo y /admin/eventos/:id/editar (el id viene de useParams)
+import { useNavigate, useParams } from 'react-router';
 import EstadoCarga from '../../components/EstadoCarga.jsx';
 import EstadoError from '../../components/EstadoError.jsx';
 import Boton from '../../components/Boton.jsx';
 import EncabezadoAdmin from './EncabezadoAdmin.jsx';
 import FormularioEvento from './FormularioEvento.jsx';
-import { useEventosAdmin } from './useEventosAdmin.js';
+import { eventosVisibles, useEventosAdmin } from './useEventosAdmin.js';
+import { useSesion } from '../cuenta/useSesion.js';
 import './Admin.css';
 
-export default function CrearEventoPage({ params, irA, sesion }) {
-  const { eventos, cargando, crearEvento, actualizarEvento } = useEventosAdmin();
-  const esNuevo = !params.eventoId;
-  const evento = esNuevo ? undefined : eventos.find((item) => item.id === params.eventoId);
+export default function CrearEventoPage() {
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const sesion = useSesion();
+  const { eventos, cargando, error, reintentar, crearEvento, actualizarEvento } = useEventosAdmin();
+  const esNuevo = !id;
+  // Un organizador solo puede editar sus propios eventos
+  const evento = esNuevo ? undefined : eventosVisibles(eventos, sesion.usuario).find((item) => item.id === id);
 
   async function guardar(datos) {
     if (esNuevo) {
       await crearEvento(datos, sesion.usuario.id);
-      irA('admin-eventos', { aviso: 'Evento creado con éxito' });
+      navegar('/admin/eventos', { state: { aviso: 'Evento creado con éxito' } });
     } else {
       await actualizarEvento(evento.id, datos);
-      irA('admin-eventos', { aviso: 'Cambios guardados' });
+      navegar('/admin/eventos', { state: { aviso: 'Cambios guardados' } });
     }
   }
 
@@ -43,12 +49,21 @@ export default function CrearEventoPage({ params, irA, sesion }) {
     );
   }
 
+  if (error) {
+    return (
+      <>
+        {encabezado}
+        <EstadoError titulo="No pudimos cargar el evento" mensaje={error} onReintentar={reintentar} />
+      </>
+    );
+  }
+
   if (!esNuevo && !evento) {
     return (
       <>
         {encabezado}
-        <EstadoError titulo="No encontramos este evento" mensaje="Puede que se haya eliminado." />
-        <Boton variante="secundario" onClick={() => irA('admin-eventos')}>
+        <EstadoError titulo="No encontramos este evento" mensaje="Puede que se haya eliminado o que no sea uno de tus eventos." />
+        <Boton variante="secundario" onClick={() => navegar('/admin/eventos')}>
           Volver a eventos
         </Boton>
       </>
@@ -58,7 +73,7 @@ export default function CrearEventoPage({ params, irA, sesion }) {
   return (
     <>
       {encabezado}
-      <FormularioEvento inicial={evento} esNuevo={esNuevo} onGuardar={guardar} onCancelar={() => irA('admin-eventos')} />
+      <FormularioEvento inicial={evento} esNuevo={esNuevo} onGuardar={guardar} onCancelar={() => navegar('/admin/eventos')} />
     </>
   );
 }

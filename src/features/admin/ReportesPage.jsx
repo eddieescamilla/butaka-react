@@ -1,5 +1,5 @@
 // DUEÑO: Eddie. Módulo 8: reportes y analítica. Ventas e ingresos por evento.
-// Props: { sesion }
+// Ruta: /admin/reportes (solo administrador)
 // Las métricas se calculan a partir de los eventos (valores derivados);
 // la evolución mensual viene de datos estáticos (src/data/reportes.js).
 import { useMemo, useState } from 'react';
@@ -19,6 +19,7 @@ import GraficoBarras from './GraficoBarras.jsx';
 import { eventosVisibles, useEventosAdmin } from './useEventosAdmin.js';
 import { useAviso } from './useAviso.js';
 import { descargarCSV } from './exportar.js';
+import { useSesion } from '../cuenta/useSesion.js';
 import './Admin.css';
 
 const FILTRO_CATEGORIAS = [{ valor: '', texto: 'Todas las categorías' }, ...CATEGORIAS.map((c) => ({ valor: c.id, texto: c.nombre }))];
@@ -37,7 +38,8 @@ const COLUMNAS_CSV = [
   { titulo: 'Ocupación (%)', valor: (e) => ocupacion(e) },
 ];
 
-export default function ReportesPage({ sesion }) {
+export default function ReportesPage() {
+  const sesion = useSesion();
   const { eventos, cargando } = useEventosAdmin();
   const { aviso, mostrarAviso, cerrarAviso } = useAviso();
   const [categoria, setCategoria] = useState('');

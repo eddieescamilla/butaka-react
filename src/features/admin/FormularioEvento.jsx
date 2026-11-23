@@ -100,8 +100,8 @@ export default function FormularioEvento({ inicial, esNuevo, onGuardar, onCancel
           })),
         }),
       });
-    } catch {
-      setErrorGeneral('No pudimos guardar el evento. Inténtalo de nuevo.');
+    } catch (error) {
+      setErrorGeneral(error.message || 'No pudimos guardar el evento. Inténtalo de nuevo.');
       setGuardando(false);
     }
   }
