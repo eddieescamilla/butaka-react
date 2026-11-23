@@ -1,0 +1,202 @@
+[
+  {
+    "id": "usr-001",
+    "nombre": "Ana",
+    "apellido": "López",
+    "correo": "ana.lopez@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-03-14"
+  },
+  {
+    "id": "usr-002",
+    "nombre": "Carlos",
+    "apellido": "Martínez",
+    "correo": "carlos.m@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "admin",
+    "estado": "activo",
+    "creado": "2026-01-08"
+  },
+  {
+    "id": "usr-003",
+    "nombre": "Sofía",
+    "apellido": "Hernández",
+    "correo": "sofia.h@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "organizador",
+    "estado": "activo",
+    "creado": "2026-02-20"
+  },
+  {
+    "id": "usr-004",
+    "nombre": "Diego",
+    "apellido": "Ramírez",
+    "correo": "diego.r@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "inactivo",
+    "creado": "2026-05-02"
+  },
+  {
+    "id": "usr-005",
+    "nombre": "María",
+    "apellido": "Pérez",
+    "correo": "maria.p@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "organizador",
+    "estado": "activo",
+    "creado": "2026-04-11"
+  },
+  {
+    "id": "usr-006",
+    "nombre": "Luis",
+    "apellido": "Guzmán",
+    "correo": "luis.g@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-08-30"
+  },
+  {
+    "id": "usr-007",
+    "nombre": "Valeria",
+    "apellido": "Castro",
+    "correo": "v.castro@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-06-03"
+  },
+  {
+    "id": "usr-008",
+    "nombre": "Andrés",
+    "apellido": "Molina",
+    "correo": "a.molina@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-06-15"
+  },
+  {
+    "id": "usr-009",
+    "nombre": "Gabriela",
+    "apellido": "Rivas",
+    "correo": "g.rivas@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-06-28"
+  },
+  {
+    "id": "usr-010",
+    "nombre": "Fernando",
+    "apellido": "Aguilar",
+    "correo": "f.aguilar@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-07-04"
+  },
+  {
+    "id": "usr-011",
+    "nombre": "Camila",
+    "apellido": "Flores",
+    "correo": "c.flores@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-07-19"
+  },
+  {
+    "id": "usr-012",
+    "nombre": "Ricardo",
+    "apellido": "Menjívar",
+    "correo": "r.menjivar@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-07-30"
+  },
+  {
+    "id": "usr-013",
+    "nombre": "Daniela",
+    "apellido": "Portillo",
+    "correo": "d.portillo@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-08-08"
+  },
+  {
+    "id": "usr-014",
+    "nombre": "José",
+    "apellido": "Cruz",
+    "correo": "j.cruz@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-08-21"
+  },
+  {
+    "id": "usr-015",
+    "nombre": "Natalia",
+    "apellido": "Serrano",
+    "correo": "n.serrano@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-09-02"
+  },
+  {
+    "id": "usr-016",
+    "nombre": "Óscar",
+    "apellido": "Henríquez",
+    "correo": "o.henriquez@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-09-17"
+  },
+  {
+    "id": "usr-017",
+    "nombre": "Lucía",
+    "apellido": "Mejía",
+    "correo": "l.mejia@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-10-01"
+  },
+  {
+    "id": "usr-018",
+    "nombre": "Mario",
+    "apellido": "Alvarado",
+    "correo": "m.alvarado@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-10-12"
+  },
+  {
+    "id": "usr-019",
+    "nombre": "Paola",
+    "apellido": "Chávez",
+    "correo": "p.chavez@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-10-27"
+  },
+  {
+    "id": "usr-020",
+    "nombre": "Kevin",
+    "apellido": "Orellana",
+    "correo": "k.orellana@correo.com",
+    "contrasena": "Butaka2026",
+    "rol": "cliente",
+    "estado": "activo",
+    "creado": "2026-11-09"
+  }
+]

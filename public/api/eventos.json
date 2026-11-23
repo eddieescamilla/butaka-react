@@ -1,0 +1,434 @@
+[
+  {
+    "id": "evt-001",
+    "titulo": "Noche indie en vivo",
+    "categoria": "conciertos",
+    "descripcion": "Tres bandas de la escena independiente salvadoreña comparten escenario en una noche de guitarras, sintetizadores y canciones nuevas.",
+    "fecha": "2026-12-12T20:00:00-06:00",
+    "lugar": "Teatro Presidente",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-concierto.jpg",
+    "imagenAlt": "Público frente a un escenario iluminado durante un concierto",
+    "estado": "en-venta",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "vip",
+        "nombre": "VIP",
+        "precio": 80,
+        "capacidad": 100,
+        "vendidos": 80
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 40,
+        "capacidad": 200,
+        "vendidos": 150
+      },
+      {
+        "id": "general",
+        "nombre": "General",
+        "precio": 25,
+        "capacidad": 200,
+        "vendidos": 90
+      }
+    ]
+  },
+  {
+    "id": "evt-002",
+    "titulo": "Festival Sonidos del Sur",
+    "categoria": "conciertos",
+    "descripcion": "Un festival al aire libre con artistas de cumbia, rock y música urbana de toda Centroamérica. Incluye zona de comida y área familiar.",
+    "fecha": "2026-12-18T19:30:00-06:00",
+    "lugar": "Anfiteatro CIFCO",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-festival.jpg",
+    "imagenAlt": "Escenario de festival con luces de colores y público al aire libre",
+    "estado": "pocos-boletos",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "vip",
+        "nombre": "VIP",
+        "precio": 95,
+        "capacidad": 50,
+        "vendidos": 48
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 55,
+        "capacidad": 150,
+        "vendidos": 142
+      },
+      {
+        "id": "general",
+        "nombre": "General",
+        "precio": 30,
+        "capacidad": 300,
+        "vendidos": 275
+      }
+    ]
+  },
+  {
+    "id": "evt-003",
+    "titulo": "Orquesta Sinfónica en vivo",
+    "categoria": "conciertos",
+    "descripcion": "La orquesta interpreta un programa de bandas sonoras de cine y piezas clásicas de temporada navideña.",
+    "fecha": "2026-12-20T16:00:00-06:00",
+    "lugar": "Teatro Nacional de San Salvador",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-teatro.jpg",
+    "imagenAlt": "Butacas rojas de un teatro frente al escenario",
+    "estado": "agotado",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "palco",
+        "nombre": "Palco",
+        "precio": 60,
+        "capacidad": 200,
+        "vendidos": 200
+      },
+      {
+        "id": "luneta",
+        "nombre": "Luneta",
+        "precio": 35,
+        "capacidad": 600,
+        "vendidos": 600
+      },
+      {
+        "id": "galeria",
+        "nombre": "Galería",
+        "precio": 15,
+        "capacidad": 400,
+        "vendidos": 400
+      }
+    ]
+  },
+  {
+    "id": "evt-004",
+    "titulo": "Tributo a Luis Miguel",
+    "categoria": "conciertos",
+    "descripcion": "Un espectáculo tributo con orquesta en vivo que recorre los grandes éxitos del bolero y el pop latino.",
+    "fecha": "2027-01-09T20:00:00-06:00",
+    "lugar": "Gimnasio Nacional José Adolfo Pineda",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-concierto.jpg",
+    "imagenAlt": "Cantante en el escenario con luces cálidas y público",
+    "estado": "en-venta",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "vip",
+        "nombre": "VIP",
+        "precio": 70,
+        "capacidad": 200,
+        "vendidos": 0
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 45,
+        "capacidad": 300,
+        "vendidos": 0
+      },
+      {
+        "id": "general",
+        "nombre": "General",
+        "precio": 20,
+        "capacidad": 500,
+        "vendidos": 0
+      }
+    ]
+  },
+  {
+    "id": "evt-005",
+    "titulo": "La casa de Bernarda Alba",
+    "categoria": "teatro",
+    "descripcion": "Montaje contemporáneo del clásico de Federico García Lorca, a cargo de un elenco de teatro universitario.",
+    "fecha": "2026-12-05T19:00:00-06:00",
+    "lugar": "Teatro Nacional de San Salvador",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-teatro.jpg",
+    "imagenAlt": "Escenario de teatro con telón abierto",
+    "estado": "en-venta",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "palco",
+        "nombre": "Palco",
+        "precio": 30,
+        "capacidad": 60,
+        "vendidos": 22
+      },
+      {
+        "id": "luneta",
+        "nombre": "Luneta",
+        "precio": 20,
+        "capacidad": 250,
+        "vendidos": 98
+      },
+      {
+        "id": "galeria",
+        "nombre": "Galería",
+        "precio": 10,
+        "capacidad": 150,
+        "vendidos": 40
+      }
+    ]
+  },
+  {
+    "id": "evt-006",
+    "titulo": "Risas sin filtro: stand-up",
+    "categoria": "teatro",
+    "descripcion": "Cuatro comediantes locales presentan material nuevo en una noche de humor para mayores de 18 años.",
+    "fecha": "2026-11-28T20:30:00-06:00",
+    "lugar": "Teatro Luis Poma",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-teatro.jpg",
+    "imagenAlt": "Micrófono en un escenario con luz de reflector",
+    "estado": "pocos-boletos",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "mesa",
+        "nombre": "Mesa frontal",
+        "precio": 35,
+        "capacidad": 40,
+        "vendidos": 38
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 25,
+        "capacidad": 120,
+        "vendidos": 110
+      },
+      {
+        "id": "general",
+        "nombre": "General",
+        "precio": 15,
+        "capacidad": 140,
+        "vendidos": 126
+      }
+    ]
+  },
+  {
+    "id": "evt-007",
+    "titulo": "El lago de los cisnes",
+    "categoria": "teatro",
+    "descripcion": "Una compañía nacional de ballet presenta la obra de Chaikovski con orquesta en vivo, en dos funciones de temporada.",
+    "fecha": "2027-01-23T18:00:00-06:00",
+    "lugar": "Teatro Presidente",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-teatro.jpg",
+    "imagenAlt": "Escenario de teatro iluminado antes de una función de ballet",
+    "estado": "en-venta",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "vip",
+        "nombre": "VIP",
+        "precio": 65,
+        "capacidad": 80,
+        "vendidos": 12
+      },
+      {
+        "id": "platea",
+        "nombre": "Platea",
+        "precio": 40,
+        "capacidad": 300,
+        "vendidos": 75
+      },
+      {
+        "id": "balcon",
+        "nombre": "Balcón",
+        "precio": 20,
+        "capacidad": 220,
+        "vendidos": 30
+      }
+    ]
+  },
+  {
+    "id": "evt-008",
+    "titulo": "Final Torneo Apertura 2026",
+    "categoria": "deportes",
+    "descripcion": "El partido que define al campeón del torneo de fútbol nacional. Las puertas se abren dos horas antes del inicio.",
+    "fecha": "2026-12-13T17:00:00-06:00",
+    "lugar": "Estadio Cuscatlán",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-deportes.jpg",
+    "imagenAlt": "Estadio de fútbol con graderías llenas",
+    "estado": "en-venta",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "platea",
+        "nombre": "Platea",
+        "precio": 50,
+        "capacidad": 2000,
+        "vendidos": 1250
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 25,
+        "capacidad": 8000,
+        "vendidos": 5100
+      },
+      {
+        "id": "general",
+        "nombre": "Sol general",
+        "precio": 10,
+        "capacidad": 15000,
+        "vendidos": 9400
+      }
+    ]
+  },
+  {
+    "id": "evt-009",
+    "titulo": "Juego de estrellas de baloncesto",
+    "categoria": "deportes",
+    "descripcion": "Los mejores jugadores de la liga mayor se enfrentan en el juego de estrellas, con concurso de clavadas y triples.",
+    "fecha": "2027-01-16T18:30:00-06:00",
+    "lugar": "Gimnasio Nacional José Adolfo Pineda",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-deportes.jpg",
+    "imagenAlt": "Cancha deportiva techada con graderías",
+    "estado": "en-venta",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "cancha",
+        "nombre": "Orilla de cancha",
+        "precio": 45,
+        "capacidad": 60,
+        "vendidos": 20
+      },
+      {
+        "id": "preferencial",
+        "nombre": "Preferencial",
+        "precio": 20,
+        "capacidad": 800,
+        "vendidos": 210
+      },
+      {
+        "id": "general",
+        "nombre": "General",
+        "precio": 8,
+        "capacidad": 1500,
+        "vendidos": 340
+      }
+    ]
+  },
+  {
+    "id": "evt-010",
+    "titulo": "Festival Sabores de Cuscatlán",
+    "categoria": "otros",
+    "descripcion": "Una feria gastronómica con más de 40 puestos de cocina salvadoreña, catas de café y música en vivo durante todo el día.",
+    "fecha": "2026-12-06T10:00:00-06:00",
+    "lugar": "CIFCO",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-festival.jpg",
+    "imagenAlt": "Público en un festival al aire libre",
+    "estado": "en-venta",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "degustacion",
+        "nombre": "Pase degustación",
+        "precio": 25,
+        "capacidad": 300,
+        "vendidos": 120
+      },
+      {
+        "id": "familiar",
+        "nombre": "Pase familiar",
+        "precio": 18,
+        "capacidad": 400,
+        "vendidos": 160
+      },
+      {
+        "id": "general",
+        "nombre": "Entrada general",
+        "precio": 5,
+        "capacidad": 2000,
+        "vendidos": 640
+      }
+    ]
+  },
+  {
+    "id": "evt-011",
+    "titulo": "Expo cómic y videojuegos",
+    "categoria": "otros",
+    "descripcion": "Convención de cómics, videojuegos y cultura pop con torneos, artistas invitados y zona de coleccionables.",
+    "fecha": "2026-12-26T09:00:00-06:00",
+    "lugar": "CIFCO",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-festival.jpg",
+    "imagenAlt": "Pasillo de una feria con público y puestos",
+    "estado": "cancelado",
+    "organizadorId": "usr-005",
+    "zonas": [
+      {
+        "id": "vip",
+        "nombre": "Pase VIP",
+        "precio": 40,
+        "capacidad": 150,
+        "vendidos": 0
+      },
+      {
+        "id": "dos-dias",
+        "nombre": "Pase dos días",
+        "precio": 20,
+        "capacidad": 800,
+        "vendidos": 0
+      },
+      {
+        "id": "general",
+        "nombre": "Pase un día",
+        "precio": 12,
+        "capacidad": 1500,
+        "vendidos": 0
+      }
+    ]
+  },
+  {
+    "id": "evt-012",
+    "titulo": "Carrera nocturna 10K",
+    "categoria": "deportes",
+    "descripcion": "Carrera recreativa nocturna por el centro de San Salvador, con categorías de 5 y 10 kilómetros.",
+    "fecha": "2026-10-24T19:00:00-06:00",
+    "lugar": "Plaza Salvador del Mundo",
+    "ciudad": "San Salvador",
+    "imagen": "img/evento-deportes.jpg",
+    "imagenAlt": "Corredores en una calle iluminada durante la noche",
+    "estado": "finalizado",
+    "organizadorId": "usr-003",
+    "zonas": [
+      {
+        "id": "kit-premium",
+        "nombre": "Kit premium",
+        "precio": 35,
+        "capacidad": 200,
+        "vendidos": 200
+      },
+      {
+        "id": "10k",
+        "nombre": "Corredor 10K",
+        "precio": 20,
+        "capacidad": 600,
+        "vendidos": 588
+      },
+      {
+        "id": "5k",
+        "nombre": "Corredor 5K",
+        "precio": 15,
+        "capacidad": 800,
+        "vendidos": 760
+      }
+    ]
+  }
+]
