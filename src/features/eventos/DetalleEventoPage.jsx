@@ -1,9 +1,10 @@
 // DUEÑO: Eddie. Módulo 2: gestión de eventos. Detalle de un evento.
-// Props: { params, irA }  ·  params.eventoId: id del evento
-// Conexión con Gabriel: "Comprar boletos" llama a irA('seleccion', { eventoId }).
+// Ruta: /eventos/:id  ·  el id se lee de la URL con useParams.
+// Conexión con Gabriel: "Comprar boletos" navega a /eventos/:id/boletos.
 import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { usePeticion } from '../../hooks/usePeticion.js';
-import { obtenerEventoPorId } from '../../servicios/eventos.js';
+import { obtenerEvento } from '../../api/eventos.js';
 import { CATEGORIAS, ESTADOS_EVENTO } from '../../data/categorias.js';
 import { formatearFecha, formatearPrecio, rutaPublica } from '../../utils/formato.js';
 import { precioDesde, sePuedeComprar } from '../../utils/eventos.js';
@@ -21,11 +22,10 @@ const MOTIVOS_SIN_VENTA = {
   finalizado: 'Este evento ya se realizó.',
 };
 
-export default function DetalleEventoPage({ params, irA }) {
-  const { estado, datos: evento, error, reintentar } = usePeticion(
-    (signal) => obtenerEventoPorId(params.eventoId, { signal }),
-    [params.eventoId],
-  );
+export default function DetalleEventoPage() {
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const { estado, datos: evento, error, reintentar } = usePeticion((signal) => obtenerEvento(id, { signal }), [id]);
 
   // El título de la pestaña muestra el nombre del evento
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function DetalleEventoPage({ params, irA }) {
   }, [evento]);
 
   const volver = (
-    <EnlaceVista vista="inicio" irA={irA} className="detalle__volver">
+    <EnlaceVista a="/eventos" className="detalle__volver">
       ← Volver a eventos
     </EnlaceVista>
   );
@@ -120,7 +120,7 @@ export default function DetalleEventoPage({ params, irA }) {
             bloque
             disabled={!disponible}
             aria-describedby={disponible ? undefined : 'detalle-motivo'}
-            onClick={() => irA('seleccion', { eventoId: evento.id })}
+            onClick={() => navegar(`/eventos/${evento.id}/boletos`)}
           >
             Comprar boletos
           </Boton>

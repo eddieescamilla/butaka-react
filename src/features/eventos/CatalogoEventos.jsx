@@ -2,12 +2,14 @@
 // (carga, error y vacío). Lo usan Inicio y Resultados de búsqueda.
 // Props:
 //   busqueda:     texto a buscar ('' = todos)
-//   irA:          función de navegación
 //   tituloId:     id del <h2> que da nombre a la sección
 //   titulo:       texto del <h2>
+// Los datos vienen de la API falsa (listarEventos) con usePeticion: si cambia
+// la búsqueda o la categoría, la petición anterior se cancela con AbortController.
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { usePeticion } from '../../hooks/usePeticion.js';
-import { obtenerEventos } from '../../servicios/eventos.js';
+import { listarEventos } from '../../api/eventos.js';
 import { precioDesde } from '../../utils/eventos.js';
 import CampoTexto from '../../components/CampoTexto.jsx';
 import Boton from '../../components/Boton.jsx';
@@ -16,7 +18,7 @@ import EstadoError from '../../components/EstadoError.jsx';
 import EstadoVacio from '../../components/EstadoVacio.jsx';
 import FiltroCategorias from './FiltroCategorias.jsx';
 import TarjetaEvento from './TarjetaEvento.jsx';
-import { usePreferencias } from './usePreferencias.js';
+import { usePreferencias } from './PreferenciasContext.jsx';
 import './CatalogoEventos.css';
 
 const ORDENES = [
@@ -30,13 +32,14 @@ function ordenar(eventos, orden) {
   return copia.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 }
 
-export default function CatalogoEventos({ busqueda = '', irA, tituloId, titulo }) {
-  // La categoría y el orden se recuerdan entre visitas (localStorage)
+export default function CatalogoEventos({ busqueda = '', tituloId, titulo }) {
+  const navegar = useNavigate();
+  // Categoría y orden: estado global (PreferenciasContext), se recuerdan entre visitas
   const { preferencias, cambiarPreferencia } = usePreferencias();
   const { categoria, orden } = preferencias;
 
   const { estado, datos, error, reintentar } = usePeticion(
-    (signal) => obtenerEventos({ busqueda, categoria }, { signal }),
+    (signal) => listarEventos({ busqueda, categoria }, { signal }),
     [busqueda, categoria],
   );
 
@@ -81,7 +84,7 @@ export default function CatalogoEventos({ busqueda = '', irA, tituloId, titulo }
             variante="secundario"
             onClick={() => {
               cambiarPreferencia('categoria', '');
-              if (busqueda) irA('inicio');
+              if (busqueda) navegar('/eventos');
             }}
           >
             Ver todos los eventos
@@ -97,7 +100,7 @@ export default function CatalogoEventos({ busqueda = '', irA, tituloId, titulo }
           <ul className="catalogo__lista">
             {eventos.map((evento) => (
               <li key={evento.id}>
-                <TarjetaEvento evento={evento} irA={irA} />
+                <TarjetaEvento evento={evento} />
               </li>
             ))}
           </ul>

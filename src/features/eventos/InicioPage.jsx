@@ -1,10 +1,10 @@
 // DUEÑO: Eddie. Módulo 2: gestión de eventos. Pantalla de inicio.
-// Props: { irA }
+// Ruta: / (index)
 import Boton from '../../components/Boton.jsx';
 import CatalogoEventos from './CatalogoEventos.jsx';
 import './InicioPage.css';
 
-export default function InicioPage({ irA }) {
+export default function InicioPage() {
   function irAlListado() {
     document.getElementById('eventos-titulo')?.scrollIntoView({ behavior: 'smooth' });
   }
@@ -22,7 +22,7 @@ export default function InicioPage({ irA }) {
         <Boton onClick={irAlListado}>Explorar eventos</Boton>
       </section>
 
-      <CatalogoEventos irA={irA} tituloId="eventos-titulo" titulo="Próximos eventos" />
+      <CatalogoEventos tituloId="eventos-titulo" titulo="Próximos eventos" />
     </div>
   );
 }
