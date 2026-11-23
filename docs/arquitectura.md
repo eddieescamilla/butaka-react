@@ -1,72 +1,62 @@
-# Arquitectura de componentes y flujo de estado
+# Arquitectura y decisiones
 
-Cómo está organizada la aplicación: qué componentes la forman, dónde vive el estado y cómo se conectan los módulos de cada integrante.
+Documento breve de cómo está construida la entrega final de Butaka y por qué.
 
-## Árbol de componentes
+## Vista general
 
 ```mermaid
 graph TD
-  App["App.jsx<br/>navegación · sesión · carrito"]
-  App --> LC[LayoutCliente]
-  App --> LA[LayoutAdmin]
-  LC --> ENC[Encabezado]
-  LC --> PAG["Pantalla actual<br/>(según rutas.js)"]
-  LC --> PIE[PiePagina]
-  LA --> BAR[BarraLateralAdmin]
-  LA --> PAGA["Pantalla del panel"]
-  PAG --> EV["features/eventos"]
-  PAG --> CU["features/cuenta"]
-  PAG --> CO["features/compra"]
-  PAGA --> AD["features/admin"]
-  EV & CU & CO & AD --> BASE["components/<br/>Boton · CampoTexto · Modal · Aviso · Estados…"]
+  M[main.jsx<br/>RouterProvider] --> R[router.jsx<br/>createBrowserRouter]
+  R --> RZ["Raiz<br/>Proveedores · título · foco · avisos PWA"]
+  RZ --> LC[LayoutCliente]
+  RZ --> P["RutaProtegida<br/>admin · organizador"]
+  P --> LA[LayoutAdmin]
+  LC --> PUB[Rutas públicas]
+  LC --> PRI["RutaProtegida<br/>sesión"] --> PRIV[Rutas privadas]
+  LA --> PANEL[Rutas del panel]
+  LA --> SA["RutaProtegida<br/>solo admin"] --> SOLO[Usuarios y reportes]
+  PUB & PRIV & PANEL & SOLO --> API["src/api<br/>eventos · usuarios · ordenes"]
+  API --> JSON["public/api/*.json<br/>(fetch, NetworkFirst)"]
+  API --> LS[("localStorage<br/>butaka:api:*")]
 ```
-
-## Componentes por módulo
-
-| Módulo del MVP | Carpeta | Responsable | Componentes principales |
-|---|---|---|---|
-| 1. Usuarios y autenticación | `features/cuenta/` | Gabriel | `LoginPage`, `RegistroPage`, `RecuperarPage`, `PerfilPage`, `TarjetaAuth`, `CampoContrasena` |
-| 2. Gestión de eventos | `features/eventos/` | Eddie | `InicioPage`, `ResultadosPage`, `DetalleEventoPage`, `CatalogoEventos`, `TarjetaEvento`, `FiltroCategorias` |
-| 3. Inventario y precios | `features/admin/` y `features/eventos/` | Eddie | `InventarioPage`, `FormularioZona`, `ZonasEvento` |
-| 4. Proceso de compra | `features/compra/` | Gabriel | `SeleccionPage`, `CarritoPage`, `ResumenPage`, `SelectorZona`, `SelectorCantidad`, `ItemCarrito`, `IndicadorPasos` |
-| 5. Sistema de pagos | `features/compra/` | Gabriel | `PagoPage`, `ResultadoPagoPage`, `FormularioPago`, `ResumenCompra` |
-| 6. Boletos electrónicos | `features/compra/` | Gabriel | `MisBoletosPage`, `BoletoPage`, `TarjetaBoleto`, `CodigoQR` |
-| 7. Panel de administración | `features/admin/` | Eddie | `DashboardPage`, `EventosAdminPage`, `CrearEventoPage`, `UsuariosPage`, `CrearUsuarioPage`, `TablaDatos`, `ModalConfirmacion` |
-| 8. Reportes y analítica | `features/admin/` | Eddie | `ReportesPage`, `TarjetaMetrica`, `GraficoBarras` |
-
-Los componentes base de `components/` (`Boton`, `CampoTexto`, `Modal`, `Aviso`, `Etiqueta`, los tres estados, `EnlaceVista` y `Logo`) los usan todos los módulos.
-
-## Flujo de estado
-
-1. **App.jsx** es dueño de tres estados: la vista actual (`useState`), la sesión (`useSesion`) y el carrito (`useCarrito`).
-2. Los pasa como props a los layouts y a la pantalla actual: `{ params, irA, sesion, carrito }`.
-3. Las pantallas no cambian el estado de App directamente: llaman a funciones (`irA`, `carrito.agregar`, `sesion.iniciarSesion`) y App vuelve a dibujar lo que corresponda.
-4. Cada pantalla pide sus propios datos con `usePeticion`, que maneja carga, error y cancelación.
-5. Sesión, carrito, órdenes y preferencias se guardan en `localStorage` con `useLocalStorage`.
-
-## Flujo principal de compra
-
-```mermaid
-graph LR
-  A[inicio] --> B[detalle-evento]
-  B -->|"irA('seleccion', { eventoId })"| C[seleccion]
-  C -->|carrito.agregar| D[carrito]
-  D --> E[resumen]
-  E --> F[pago]
-  F --> G[resultado-pago]
-  G --> H[mis-boletos]
-  H --> I[boleto]
-```
-
-Si una vista pide sesión y no la hay, App muestra `login` y, al iniciar sesión, regresa a la vista que se había pedido.
 
 ## Decisiones
 
-- **El estado global vive en `App.jsx`:** la vista actual, la sesión y el carrito se crean una sola vez y bajan por props. Context no se exige en esta entrega; se incorpora en la tercera.
-- **Navegación con estado, sin router:** `irA` cambia la vista y la guarda en el historial del navegador, así funcionan el botón Atrás y la recarga.
-- **Un contrato fijo entre módulos:** toda pantalla recibe `{ params, irA, sesion, carrito }`. Cada integrante trabajó en sus propias carpetas; los módulos solo se conectan por ese contrato y por los nombres de las vistas.
-- **Datos por servicios simulados:** las pantallas no leen los datos directamente: piden a `servicios/` funciones que devuelven promesas con retraso, y `usePeticion` muestra carga, error con reintento y vacío. Al cambiar de pantalla, la petición anterior se cancela con `AbortController`.
-- **Valores derivados en lugar de estado duplicado:** totales del carrito, disponibilidad por zona, estado de venta de un evento y métricas de reportes se calculan cada vez, para que nunca queden desactualizados.
-- **Persistencia inmediata:** `useLocalStorage` escribe en el momento del cambio, para que no se pierda un dato si la pantalla navega justo después de guardar.
-- **Estilos por componente:** cada componente tiene su CSS con clases BEM en español y usa las variables de `tokens.css` del manual de marca. Diseño desde móvil, con cortes a 768 y 1024 px.
-- **Accesibilidad desde la base:** el modal usa `<dialog>` (atrapa el foco y se cierra con Escape), los campos asocian sus errores con `aria-describedby`, al cambiar de pantalla el foco va al contenido, y las tablas del panel se vuelven tarjetas en móvil.
+| Decisión | Alternativa descartada | Por qué |
+|---|---|---|
+| Cada módulo registra sus rutas y su Context en `features/*/modulo.jsx`; el router los descubre con `import.meta.glob` | Un solo archivo de rutas que todos editan | Los dos integrantes trabajamos sin depender del otro: nadie edita archivos ajenos para agregar una pantalla, y no hubo conflictos de merge |
+| React Router en modo datos con layouts anidados y rutas protegidas como rutas sin path | Proteger dentro de cada pantalla | La protección queda en un solo lugar (`RutaProtegida`) y se ve en el árbol de rutas |
+| Filtros en la URL (`/eventos?q=`, `/admin/reportes?periodo=`, `/admin/inventario?evento=`) | Estado local | Se pueden recargar, compartir y usar con el botón Atrás |
+| Context + `useReducer` con acciones con nombre (`carrito/agregar`) y persistencia en un efecto | `useState` con funciones sueltas | Cada cambio de estado es explícito, el reductor es una función pura y fácil de probar |
+| API falsa local: semilla JSON por `fetch` + escrituras en `localStorage` | DummyJSON | No depende de un servicio externo, los datos son del dominio de eventos y la caché del service worker puede guardar las respuestas |
+| La API recalcula montos y descuenta inventario al crear la orden | Confiar en los totales del carrito | Simula lo que haría un servidor real y mantiene inventario y reportes consistentes |
+| Reportes como funciones puras sobre las órdenes (`analitica.js`) | Datos estáticos | Cualquier compra nueva cambia los reportes al instante |
+| Órdenes de prueba generadas con un script que cuadra con los `vendidos` | Escribirlas a mano | Más de 500 órdenes coherentes y repetibles |
+| QR con la librería `qrcode` dibujado como SVG, con un enlace de verificación firmado | QR simulado de la segunda entrega | Es escaneable de verdad y la firma permite detectar códigos alterados |
+| `registerType: 'prompt'` + `clientsClaim` | Actualización automática | El usuario decide cuándo recargar (no pierde un formulario a medias) y la app funciona sin conexión desde la primera visita |
+| Carga diferida del panel y de los boletos | Un solo paquete | Un cliente no descarga el código del panel ni la librería de QR si no los usa |
+
+## Flujo de una compra
+
+```mermaid
+sequenceDiagram
+  participant U as Usuario
+  participant C as CarritoContext
+  participant P as PagoPage
+  participant A as src/api
+  U->>C: agregar(item)
+  U->>P: Pagar
+  P->>P: enCurso.current = true (evita doble envío)
+  P->>A: procesarPago (pasarela simulada)
+  P->>A: crearOrden({ usuarioId, items, tarjeta })
+  A->>A: recalcula montos · registrarVenta (inventario)
+  A-->>P: orden con boletos y firma
+  P->>C: vaciar()
+  P->>U: /checkout/resultado (correo simulado)
+```
+
+## Trabajo en equipo
+
+- Rama `base` primero (router, API, contextos compartidos, GitHub Pages); después, cada integrante con sus propias ramas y pull requests en paralelo.
+- Dueños por carpeta y contrato de hooks, rutas y API documentados en `CONTRIBUIR.md`.
+- `main` compiló después de cada merge y el workflow publicó cada versión en GitHub Pages.
