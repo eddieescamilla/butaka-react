@@ -1,6 +1,7 @@
 // DUEÑO: Eddie. Módulo 7: panel de administración. Dashboard.
-// Props: { irA, sesion }
+// Ruta: /admin (administrador u organizador)
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { RESUMEN_DASHBOARD, VENTAS_POR_MES } from '../../data/reportes.js';
 import { ESTADOS_EVENTO } from '../../data/categorias.js';
 import { formatearFecha, formatearNumero, formatearPrecio } from '../../utils/formato.js';
@@ -13,6 +14,7 @@ import TarjetaMetrica from './TarjetaMetrica.jsx';
 import TablaDatos from './TablaDatos.jsx';
 import GraficoBarras from './GraficoBarras.jsx';
 import { eventosVisibles, useEventosAdmin } from './useEventosAdmin.js';
+import { useSesion } from '../cuenta/useSesion.js';
 import './Admin.css';
 
 const COLUMNAS = [
@@ -30,7 +32,9 @@ const COLUMNAS = [
   },
 ];
 
-export default function DashboardPage({ irA, sesion }) {
+export default function DashboardPage() {
+  const sesion = useSesion();
+  const navegar = useNavigate();
   const { eventos, cargando } = useEventosAdmin();
   const r = RESUMEN_DASHBOARD;
 
@@ -80,7 +84,7 @@ export default function DashboardPage({ irA, sesion }) {
         {cargando && <EstadoCarga mensaje="Cargando eventos…" />}
         {!cargando && proximos.length === 0 && (
           <EstadoVacio titulo="No hay eventos próximos" mensaje="Crea un evento para empezar a vender boletos.">
-            <Boton onClick={() => irA('admin-crear-evento')}>Crear evento</Boton>
+            <Boton onClick={() => navegar('/admin/eventos/nuevo')}>Crear evento</Boton>
           </EstadoVacio>
         )}
         {!cargando && proximos.length > 0 && <TablaDatos titulo="Próximos eventos" columnas={COLUMNAS} filas={proximos} />}

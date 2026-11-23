@@ -1,5 +1,8 @@
 // DUEÑO: Eddie. Módulo 7: panel de administración. Crear o editar un usuario.
-// Props: { params, irA }  ·  params.usuarioId: si viene, se edita ese usuario
+// Rutas: /admin/usuarios/nuevo y /admin/usuarios/:id/editar (solo administrador)
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import Aviso from '../../components/Aviso.jsx';
 import EstadoCarga from '../../components/EstadoCarga.jsx';
 import EstadoError from '../../components/EstadoError.jsx';
 import Boton from '../../components/Boton.jsx';
@@ -8,19 +11,28 @@ import FormularioUsuario from './FormularioUsuario.jsx';
 import { useUsuariosAdmin } from './useUsuariosAdmin.js';
 import './Admin.css';
 
-export default function CrearUsuarioPage({ params, irA }) {
-  const { usuarios, cargando, crearUsuario, actualizarUsuario } = useUsuariosAdmin();
-  const esNuevo = !params.usuarioId;
-  const usuario = esNuevo ? undefined : usuarios.find((item) => item.id === params.usuarioId);
-  const otrosUsuarios = usuarios.filter((item) => item.id !== params.usuarioId);
+export default function CrearUsuarioPage() {
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const { usuarios, cargando, error, reintentar, crearUsuario, actualizarUsuario } = useUsuariosAdmin();
+  const [errorGuardar, setErrorGuardar] = useState('');
+  const esNuevo = !id;
+  const usuario = esNuevo ? undefined : usuarios.find((item) => item.id === id);
+  const otrosUsuarios = usuarios.filter((item) => item.id !== id);
 
   async function guardar(datos) {
-    if (esNuevo) {
-      await crearUsuario(datos);
-      irA('admin-usuarios', { aviso: 'Usuario creado con éxito' });
-    } else {
-      await actualizarUsuario(usuario.id, datos);
-      irA('admin-usuarios', { aviso: 'Cambios guardados' });
+    setErrorGuardar('');
+    try {
+      if (esNuevo) {
+        await crearUsuario(datos);
+        navegar('/admin/usuarios', { state: { aviso: 'Usuario creado con éxito' } });
+      } else {
+        await actualizarUsuario(usuario.id, datos);
+        navegar('/admin/usuarios', { state: { aviso: 'Cambios guardados' } });
+      }
+    } catch (falla) {
+      setErrorGuardar(falla.message);
+      throw falla; // el formulario vuelve a habilitar el botón
     }
   }
 
@@ -40,12 +52,21 @@ export default function CrearUsuarioPage({ params, irA }) {
     );
   }
 
+  if (error) {
+    return (
+      <>
+        {encabezado}
+        <EstadoError titulo="No pudimos cargar los usuarios" mensaje={error} onReintentar={reintentar} />
+      </>
+    );
+  }
+
   if (!esNuevo && !usuario) {
     return (
       <>
         {encabezado}
         <EstadoError titulo="No encontramos este usuario" />
-        <Boton variante="secundario" onClick={() => irA('admin-usuarios')}>
+        <Boton variante="secundario" onClick={() => navegar('/admin/usuarios')}>
           Volver a usuarios
         </Boton>
       </>
@@ -55,7 +76,8 @@ export default function CrearUsuarioPage({ params, irA }) {
   return (
     <>
       {encabezado}
-      <FormularioUsuario inicial={usuario} otrosUsuarios={otrosUsuarios} onGuardar={guardar} onCancelar={() => irA('admin-usuarios')} />
+      {errorGuardar && <Aviso tipo="error" mensaje={errorGuardar} duracion={0} onCerrar={() => setErrorGuardar('')} />}
+      <FormularioUsuario inicial={usuario} otrosUsuarios={otrosUsuarios} onGuardar={guardar} onCancelar={() => navegar('/admin/usuarios')} />
     </>
   );
 }

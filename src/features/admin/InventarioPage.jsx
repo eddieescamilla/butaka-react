@@ -1,7 +1,9 @@
 // DUEÑO: Eddie. Módulo 3: inventario y precios. Zonas, precios y
 // disponibilidad de cada evento.
-// Props: { params, sesion }  ·  params.eventoId: evento elegido (opcional)
+// Ruta: /admin/inventario?evento=evt-001 (administrador u organizador)
+// El evento elegido vive en la URL (useSearchParams): se puede recargar o compartir.
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { formatearFecha, formatearNumero, formatearPrecio } from '../../utils/formato.js';
 import { disponiblesZona, estadoZona } from '../../utils/eventos.js';
 import Boton from '../../components/Boton.jsx';
@@ -15,15 +17,19 @@ import ModalConfirmacion from './ModalConfirmacion.jsx';
 import FormularioZona from './FormularioZona.jsx';
 import { eventosVisibles, useEventosAdmin } from './useEventosAdmin.js';
 import { useAviso } from './useAviso.js';
+import ErrorPanel from './ErrorPanel.jsx';
+import { useSesion } from '../cuenta/useSesion.js';
 import './Admin.css';
 
 const TEXTO_ESTADO_ZONA = { 'en-venta': 'Disponible', 'pocos-boletos': 'Pocos boletos', agotado: 'Agotado' };
 
-export default function InventarioPage({ params, sesion }) {
-  const { eventos, cargando, guardarZona, eliminarZona } = useEventosAdmin();
+export default function InventarioPage() {
+  const sesion = useSesion();
+  const [parametros, setParametros] = useSearchParams();
+  const { eventos, cargando, error, reintentar, guardarZona, eliminarZona } = useEventosAdmin();
   const { aviso, mostrarAviso, cerrarAviso } = useAviso();
   const visibles = eventosVisibles(eventos, sesion.usuario).filter((evento) => evento.estado !== 'finalizado');
-  const [eventoId, setEventoId] = useState(params.eventoId ?? '');
+  const eventoId = parametros.get('evento') ?? '';
   // Sin elección, se muestra el primer evento de la lista (valor derivado)
   const evento = visibles.find((item) => item.id === eventoId) ?? visibles[0];
 
@@ -38,8 +44,8 @@ export default function InventarioPage({ params, sesion }) {
       await guardarZona(evento.id, zona);
       setEdicion(null);
       mostrarAviso(esNueva ? 'Zona agregada' : 'Zona actualizada');
-    } catch {
-      mostrarAviso('No pudimos guardar la zona. Inténtalo de nuevo.', 'error');
+    } catch (falla) {
+      mostrarAviso(falla.message || 'No pudimos guardar la zona. Inténtalo de nuevo.', 'error');
     }
   }
 
@@ -49,6 +55,8 @@ export default function InventarioPage({ params, sesion }) {
       await eliminarZona(evento.id, porEliminar.id);
       mostrarAviso('Zona eliminada');
       setPorEliminar(null);
+    } catch (falla) {
+      mostrarAviso(falla.message, 'error');
     } finally {
       setEliminando(false);
     }
@@ -63,6 +71,15 @@ export default function InventarioPage({ params, sesion }) {
       <>
         {encabezado(null, 'Zonas, precios y disponibilidad por evento')}
         <EstadoCarga />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        {encabezado(null, 'Zonas, precios y disponibilidad por evento')}
+        <ErrorPanel mensaje={error} onReintentar={reintentar} />
       </>
     );
   }
@@ -133,7 +150,7 @@ export default function InventarioPage({ params, sesion }) {
           etiqueta="Evento"
           opciones={visibles.map((item) => ({ valor: item.id, texto: item.titulo }))}
           value={evento.id}
-          onChange={(e) => setEventoId(e.target.value)}
+          onChange={(e) => setParametros({ evento: e.target.value }, { replace: true })}
         />
       </div>
 

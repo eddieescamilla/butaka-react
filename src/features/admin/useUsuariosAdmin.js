@@ -1,58 +1,28 @@
-// DUEÑO: Eddie. Estado de los usuarios en el panel de administración.
-// Se guardan en localStorage ('butaka:admin-usuarios'). El login puede leer
-// la misma clave con listaUsuarios() de src/servicios/usuarios.js.
-
+// DUEÑO: Eddie. Usuarios del panel de administración (módulo 7).
+// Lee y escribe en la API falsa (src/api/usuarios.js); el login usa la misma
+// colección, así que un usuario creado o desactivado aquí afecta su acceso.
 import { useCallback } from 'react';
-import { useLocalStorage } from '../../hooks/useLocalStorage.js';
-import { usePeticion } from '../../hooks/usePeticion.js';
-import { simularPeticion } from '../../utils/simularPeticion.js';
-import { CLAVE_USUARIOS_ADMIN } from '../../servicios/usuarios.js';
-import { USUARIOS } from '../../data/usuarios.js';
-
-function esperar() {
-  return simularPeticion(() => null, { retraso: 700 });
-}
+import * as api from '../../api/usuarios.js';
+import { useListaRemota } from './useListaRemota.js';
 
 export function useUsuariosAdmin() {
-  const [usuarios, setUsuarios] = useLocalStorage(CLAVE_USUARIOS_ADMIN, USUARIOS);
-
-  const carga = usePeticion((signal) => simularPeticion(() => true, { signal, retraso: 400 }), []);
+  const { lista: usuarios, estado, cargando, error, reintentar, guardarEnLista } = useListaRemota((signal) =>
+    api.listarUsuarios({ signal }),
+  );
 
   const crearUsuario = useCallback(
     async (datos) => {
-      await esperar();
-      const nuevo = {
-        id: `usr-${Date.now()}`,
-        estado: 'activo',
-        creado: new Date().toISOString().slice(0, 10),
-        ...datos,
-      };
-      setUsuarios((actuales) => [...actuales, nuevo]);
+      const nuevo = await api.crearUsuario(datos);
+      guardarEnLista(nuevo);
       return nuevo;
     },
-    [setUsuarios],
+    [guardarEnLista],
   );
 
-  const actualizarUsuario = useCallback(
-    async (id, cambios) => {
-      await esperar();
-      setUsuarios((actuales) => actuales.map((usuario) => (usuario.id === id ? { ...usuario, ...cambios } : usuario)));
-    },
-    [setUsuarios],
-  );
+  const actualizarUsuario = useCallback(async (id, cambios) => guardarEnLista(await api.actualizarUsuario(id, cambios)), [guardarEnLista]);
 
   // Activa o desactiva una cuenta (no se borran usuarios, se desactivan)
-  const cambiarEstado = useCallback(
-    async (id) => {
-      await esperar();
-      setUsuarios((actuales) =>
-        actuales.map((usuario) =>
-          usuario.id === id ? { ...usuario, estado: usuario.estado === 'activo' ? 'inactivo' : 'activo' } : usuario,
-        ),
-      );
-    },
-    [setUsuarios],
-  );
+  const cambiarEstado = useCallback(async (id) => guardarEnLista(await api.cambiarEstadoUsuario(id)), [guardarEnLista]);
 
-  return { usuarios, cargando: carga.estado === 'cargando', crearUsuario, actualizarUsuario, cambiarEstado };
+  return { usuarios, estado, cargando, error, reintentar, crearUsuario, actualizarUsuario, cambiarEstado };
 }

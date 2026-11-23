@@ -1,6 +1,7 @@
 // DUEÑO: Eddie. Módulo 7: panel de administración. Usuarios.
-// Props: { params, irA, sesion }  ·  params.aviso: mensaje de confirmación opcional
+// Ruta: /admin/usuarios (solo administrador)
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ROLES } from '../../data/categorias.js';
 import Boton from '../../components/Boton.jsx';
 import CampoTexto from '../../components/CampoTexto.jsx';
@@ -10,13 +11,17 @@ import EncabezadoAdmin from './EncabezadoAdmin.jsx';
 import TablaDatos from './TablaDatos.jsx';
 import { useUsuariosAdmin } from './useUsuariosAdmin.js';
 import { useAviso } from './useAviso.js';
+import ErrorPanel from './ErrorPanel.jsx';
+import { useSesion } from '../cuenta/useSesion.js';
 import './Admin.css';
 
 const FILTRO_ROLES = [{ valor: '', texto: 'Todos los roles' }, ...Object.entries(ROLES).map(([valor, texto]) => ({ valor, texto }))];
 
-export default function UsuariosPage({ params, irA, sesion }) {
-  const { usuarios, cargando, cambiarEstado } = useUsuariosAdmin();
-  const { aviso, mostrarAviso, cerrarAviso } = useAviso(params.aviso);
+export default function UsuariosPage() {
+  const sesion = useSesion();
+  const navegar = useNavigate();
+  const { usuarios, cargando, error, reintentar, cambiarEstado } = useUsuariosAdmin();
+  const { aviso, mostrarAviso, cerrarAviso } = useAviso();
   const [busqueda, setBusqueda] = useState('');
   const [rol, setRol] = useState('');
   const [procesandoId, setProcesandoId] = useState(null);
@@ -37,6 +42,8 @@ export default function UsuariosPage({ params, irA, sesion }) {
     try {
       await cambiarEstado(usuario.id);
       mostrarAviso(usuario.estado === 'activo' ? 'Usuario desactivado' : 'Usuario activado');
+    } catch (falla) {
+      mostrarAviso(falla.message, 'error');
     } finally {
       setProcesandoId(null);
     }
@@ -58,7 +65,7 @@ export default function UsuariosPage({ params, irA, sesion }) {
         const esUnoMismo = u.id === sesion.usuario?.id;
         return (
           <span className="admin-acciones">
-            <Boton variante="texto" tamano="pequeno" onClick={() => irA('admin-crear-usuario', { usuarioId: u.id })} aria-label={`Editar a ${u.nombre} ${u.apellido}`}>
+            <Boton variante="texto" tamano="pequeno" onClick={() => navegar(`/admin/usuarios/${u.id}/editar`)} aria-label={`Editar a ${u.nombre} ${u.apellido}`}>
               Editar
             </Boton>
             <Boton
@@ -86,7 +93,7 @@ export default function UsuariosPage({ params, irA, sesion }) {
         subtitulo="Consulta y administra las cuentas de clientes, organizadores y administradores"
         aviso={aviso}
         onCerrarAviso={cerrarAviso}
-        accion={<Boton onClick={() => irA('admin-crear-usuario')}>Agregar usuario</Boton>}
+        accion={<Boton onClick={() => navegar('/admin/usuarios/nuevo')}>Agregar usuario</Boton>}
       />
 
       <div className="admin-filtros">
@@ -96,7 +103,8 @@ export default function UsuariosPage({ params, irA, sesion }) {
 
       <div className="admin-seccion">
         {cargando && <EstadoCarga mensaje="Cargando usuarios…" />}
-        {!cargando && filas.length === 0 && <EstadoVacio titulo="Ningún usuario coincide" mensaje="Cambia la búsqueda o el rol." />}
+        {error && <ErrorPanel mensaje={error} onReintentar={reintentar} />}
+        {!cargando && !error && filas.length === 0 && <EstadoVacio titulo="Ningún usuario coincide" mensaje="Cambia la búsqueda o el rol." />}
         {!cargando && filas.length > 0 && <TablaDatos titulo="Lista de usuarios" columnas={columnas} filas={filas} />}
       </div>
     </>
