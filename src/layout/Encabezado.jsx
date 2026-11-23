@@ -1,33 +1,39 @@
 // DUEÑO: Eddie. Encabezado del sitio: logo, buscador, navegación, carrito y sesión.
-// Props: { vista, irA, sesion, carrito }
-// Usa del contrato de Gabriel: carrito.totalItems, sesion.usuario,
-// sesion.esAdmin y sesion.cerrarSesion().
+// Lee la sesión y el carrito de sus Context (useSesion y useCarrito de Gabriel),
+// sin recibir props. La búsqueda navega a /eventos?q=texto.
 import { useState } from 'react';
+import { NavLink, useNavigate, useSearchParams } from 'react-router';
 import Logo from '../components/Logo.jsx';
 import Boton from '../components/Boton.jsx';
 import EnlaceVista from '../components/EnlaceVista.jsx';
+import { useSesion } from '../features/cuenta/useSesion.js';
+import { useCarrito } from '../features/compra/useCarrito.js';
 import './Encabezado.css';
 
-export default function Encabezado({ vista, irA, sesion, carrito }) {
-  const [busqueda, setBusqueda] = useState('');
+export default function Encabezado() {
+  const sesion = useSesion();
+  const carrito = useCarrito();
+  const navegar = useNavigate();
+  const [parametros] = useSearchParams();
+  const [busqueda, setBusqueda] = useState(parametros.get('q') ?? '');
 
   function alBuscar(evento) {
     evento.preventDefault();
-    irA('resultados', { busqueda: busqueda.trim() });
+    const texto = busqueda.trim();
+    navegar(texto ? `/eventos?q=${encodeURIComponent(texto)}` : '/eventos');
   }
 
   function alCerrarSesion() {
     sesion.cerrarSesion();
-    irA('inicio');
+    navegar('/');
   }
 
-  const textoCarrito =
-    carrito.totalItems === 1 ? 'Carrito: 1 boleto' : `Carrito: ${carrito.totalItems} boletos`;
+  const textoCarrito = carrito.totalItems === 1 ? 'Carrito: 1 boleto' : `Carrito: ${carrito.totalItems} boletos`;
 
   return (
     <header className="encabezado">
       <div className="contenedor encabezado__contenido">
-        <EnlaceVista vista="inicio" irA={irA} className="encabezado__logo" aria-label="Butaka, ir al inicio">
+        <EnlaceVista a="/" className="encabezado__logo" aria-label="Butaka, ir al inicio">
           <Logo />
         </EnlaceVista>
 
@@ -51,33 +57,27 @@ export default function Encabezado({ vista, irA, sesion, carrito }) {
         <nav className="encabezado__nav" aria-label="Navegación principal">
           <ul>
             <li>
-              <EnlaceVista vista="inicio" irA={irA} activo={vista === 'inicio' || vista === 'resultados'}>
+              <NavLink to="/eventos" className="enlace-vista">
                 Eventos
-              </EnlaceVista>
+              </NavLink>
             </li>
             <li>
-              <EnlaceVista vista="mis-boletos" irA={irA} activo={vista === 'mis-boletos' || vista === 'boleto'}>
+              <NavLink to="/boletos" className="enlace-vista">
                 Mis boletos
-              </EnlaceVista>
+              </NavLink>
             </li>
             {sesion.esAdmin && (
               <li>
-                <EnlaceVista vista="admin-dashboard" irA={irA}>
+                <NavLink to="/admin" className="enlace-vista">
                   Panel
-                </EnlaceVista>
+                </NavLink>
               </li>
             )}
           </ul>
         </nav>
 
         <div className="encabezado__acciones">
-          <EnlaceVista
-            vista="carrito"
-            irA={irA}
-            activo={vista === 'carrito'}
-            className="encabezado__carrito"
-            aria-label={textoCarrito}
-          >
+          <NavLink to="/carrito" className="enlace-vista encabezado__carrito" aria-label={textoCarrito}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
@@ -88,19 +88,19 @@ export default function Encabezado({ vista, irA, sesion, carrito }) {
                 {carrito.totalItems}
               </span>
             )}
-          </EnlaceVista>
+          </NavLink>
 
           {sesion.haySesion ? (
             <>
-              <EnlaceVista vista="perfil" irA={irA} activo={vista === 'perfil'} className="encabezado__saludo">
+              <NavLink to="/perfil" className="enlace-vista encabezado__saludo">
                 Hola, {sesion.usuario.nombre}
-              </EnlaceVista>
+              </NavLink>
               <Boton variante="secundario" tamano="pequeno" onClick={alCerrarSesion}>
                 Cerrar sesión
               </Boton>
             </>
           ) : (
-            <Boton tamano="pequeno" onClick={() => irA('login')}>
+            <Boton tamano="pequeno" onClick={() => navegar('/login')}>
               Iniciar sesión
             </Boton>
           )}

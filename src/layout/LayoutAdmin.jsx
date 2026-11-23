@@ -1,5 +1,6 @@
 // DUEÑO: Eddie. Estructura del panel de administración: barra lateral + contenido.
-// Props: { vista, irA, sesion, carrito, children }
+// Ruta de layout de /admin: dibuja la pantalla del panel con <Outlet />.
+import { Outlet } from 'react-router';
 import BarraLateralAdmin from './BarraLateralAdmin.jsx';
 import './LayoutAdmin.css';
 
@@ -9,15 +10,15 @@ function saltarAlContenido(evento) {
   document.getElementById('contenido')?.focus();
 }
 
-export default function LayoutAdmin({ vista, irA, sesion, children }) {
+export default function LayoutAdmin() {
   return (
     <div className="layout-admin">
       <a href="#contenido" className="saltar-contenido" onClick={saltarAlContenido}>
         Saltar al contenido
       </a>
-      <BarraLateralAdmin vista={vista} irA={irA} sesion={sesion} />
+      <BarraLateralAdmin />
       <main id="contenido" className="layout-admin__contenido" tabIndex={-1}>
-        {children}
+        <Outlet />
       </main>
     </div>
   );
