@@ -1,7 +1,6 @@
 // DUEÑO: Eddie. Tarjeta de un evento en el listado (componente del Design System).
 // Props:
-//   evento: objeto de src/data/eventos.js
-//   irA:    función de navegación
+//   evento: evento de la API falsa (src/api/eventos.js)
 // Toda la tarjeta es clicable, pero el enlace real es el título
 // (así el lector de pantalla anuncia un solo enlace por tarjeta).
 import Etiqueta from '../../components/Etiqueta.jsx';
@@ -11,7 +10,7 @@ import { formatearFecha, formatearPrecio, rutaPublica } from '../../utils/format
 import { precioDesde } from '../../utils/eventos.js';
 import './TarjetaEvento.css';
 
-export default function TarjetaEvento({ evento, irA }) {
+export default function TarjetaEvento({ evento }) {
   const categoria = CATEGORIAS.find((item) => item.id === evento.categoria);
   const sinVenta = evento.estado === 'agotado' || evento.estado === 'cancelado';
 
@@ -35,12 +34,7 @@ export default function TarjetaEvento({ evento, irA }) {
       <div className="tarjeta-evento__cuerpo">
         <Etiqueta variante={evento.categoria}>{categoria?.nombre}</Etiqueta>
         <h3 className="tarjeta-evento__titulo">
-          <EnlaceVista
-            vista="detalle-evento"
-            params={{ eventoId: evento.id }}
-            irA={irA}
-            className="tarjeta-evento__enlace"
-          >
+          <EnlaceVista a={`/eventos/${evento.id}`} className="tarjeta-evento__enlace">
             {evento.titulo}
           </EnlaceVista>
         </h3>
