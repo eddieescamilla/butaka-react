@@ -16,6 +16,7 @@ import ResumenCompra from './ResumenCompra.jsx';
 import FormularioPago from './FormularioPago.jsx';
 import { procesarPago, soloDigitos } from './pagos.js';
 import { useCarrito } from './useCarrito.js';
+import { useEnLinea } from '../pwa/useEnLinea.js';
 import './Compra.css';
 
 export default function PagoPage() {
@@ -24,6 +25,8 @@ export default function PagoPage() {
   const navegar = useNavigate();
   const [procesando, setProcesando] = useState(false);
   const enCurso = useRef(false);
+  // Un pago real necesita conexión: sin red el formulario se desactiva
+  const enLinea = useEnLinea();
 
   if (carrito.items.length === 0 && !procesando) {
     return (
@@ -72,7 +75,12 @@ export default function PagoPage() {
           <h2 id="pago-tarjeta" className="compra__subtitulo">
             Tarjeta de crédito o débito
           </h2>
-          <FormularioPago total={carrito.total} procesando={procesando} onPagar={pagar} />
+          {!enLinea && (
+            <p className="compra__alerta" role="alert">
+              Estás sin conexión. Tu carrito se guardó; podrás pagar cuando vuelva la conexión.
+            </p>
+          )}
+          <FormularioPago total={carrito.total} procesando={procesando} deshabilitado={!enLinea} onPagar={pagar} />
         </section>
 
         <ResumenCompra

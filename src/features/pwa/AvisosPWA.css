@@ -1,0 +1,78 @@
+/* Avisos flotantes de la PWA, abajo de la pantalla */
+.avisos-pwa {
+  position: fixed;
+  inset: auto var(--espacio-2) var(--espacio-2);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  pointer-events: none;
+}
+
+.avisos-pwa > * {
+  pointer-events: auto;
+}
+
+.avisos-pwa__aviso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-1) var(--espacio-2);
+  width: 100%;
+  max-width: 34rem;
+  padding: var(--espacio-2);
+  font-size: var(--texto-sm);
+  color: var(--texto-principal);
+  background-color: var(--superficie);
+  border: 1px solid var(--borde-fuerte);
+  border-left: 4px solid var(--secundario);
+  border-radius: var(--radio-tarjeta);
+  box-shadow: 0 8px 24px rgb(30 20 51 / 0.16);
+}
+
+.avisos-pwa__aviso p {
+  flex: 1 1 14rem;
+}
+
+.avisos-pwa__aviso--offline {
+  background-color: var(--advertencia-fondo);
+  border-left-color: var(--advertencia);
+}
+
+.avisos-pwa__aviso--exito {
+  border-left-color: var(--exito);
+}
+
+.avisos-pwa__acciones {
+  display: flex;
+  gap: var(--espacio-1);
+}
+
+.avisos-pwa__cerrar {
+  padding: 0.25rem 0.5rem;
+  color: var(--texto-secundario);
+  background: none;
+  border: none;
+  border-radius: var(--radio-boton);
+  cursor: pointer;
+}
+
+.avisos-pwa__instalar {
+  align-self: flex-end;
+  box-shadow: 0 8px 24px rgb(30 20 51 / 0.2);
+}
+
+@media (min-width: 768px) {
+  .avisos-pwa {
+    inset: auto var(--espacio-3) var(--espacio-3) auto;
+    align-items: flex-end;
+    width: 34rem;
+  }
+}
+
+@media print {
+  .avisos-pwa {
+    display: none;
+  }
+}
