@@ -2,6 +2,7 @@
 // Props:
 //   total:      monto a pagar (texto del botón)
 //   procesando: boolean (el botón muestra "Procesando…" y no se puede pulsar dos veces)
+//   deshabilitado: boolean (por ejemplo, sin conexión)
 //   onPagar:    función que recibe { titular, numero, vencimiento, cvv } ya validados
 import { useRef, useState } from 'react';
 import Boton from '../../components/Boton.jsx';
@@ -10,7 +11,7 @@ import { formatearPrecio } from '../../utils/formato.js';
 import { formatearNumeroTarjeta, formatearVencimiento, soloDigitos, TARJETAS_PRUEBA, validarPago } from './pagos.js';
 import './FormularioPago.css';
 
-export default function FormularioPago({ total, procesando, onPagar }) {
+export default function FormularioPago({ total, procesando, deshabilitado = false, onPagar }) {
   const [valores, setValores] = useState({ titular: '', numero: '', vencimiento: '', cvv: '' });
   const [errores, setErrores] = useState({});
   const [intentoEnviar, setIntentoEnviar] = useState(false);
@@ -33,7 +34,7 @@ export default function FormularioPago({ total, procesando, onPagar }) {
 
   function alEnviar(evento) {
     evento.preventDefault();
-    if (procesando) return;
+    if (procesando || deshabilitado) return;
     setIntentoEnviar(true);
     const encontrados = validarPago(valores);
     setErrores(encontrados);
@@ -112,7 +113,7 @@ export default function FormularioPago({ total, procesando, onPagar }) {
         </ul>
       </div>
 
-      <Boton type="submit" bloque cargando={procesando}>
+      <Boton type="submit" bloque cargando={procesando} disabled={deshabilitado}>
         Pagar {formatearPrecio(total)}
       </Boton>
       <p className="formulario-pago__seguridad">🔒 No guardamos el número de tu tarjeta.</p>
