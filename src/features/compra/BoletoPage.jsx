@@ -10,7 +10,7 @@ import { usePeticion } from '../../hooks/usePeticion.js';
 import { obtenerBoleto } from '../../api/ordenes.js';
 import { formatearFecha, formatearPrecio } from '../../utils/formato.js';
 import { useSesion } from '../cuenta/useSesion.js';
-import CodigoQR from './CodigoQR.jsx';
+import CodigoQR, { enlaceVerificacion } from './CodigoQR.jsx';
 import './Compra.css';
 import './BoletoPage.css';
 
@@ -90,9 +90,18 @@ export default function BoletoPage() {
           </div>
 
           <div className="boleto__qr">
-            <CodigoQR codigo={boleto.codigo} tamano={200} />
+            <CodigoQR
+              valor={enlaceVerificacion(boleto)}
+              etiqueta={`Código QR del boleto ${boleto.codigo}. Contiene el enlace para verificarlo en la entrada.`}
+              tamano={200}
+            />
             <p className="boleto__codigo">{boleto.codigo}</p>
-            <p className="boleto__instruccion">Muestra este código en la entrada. Es válido para una sola persona.</p>
+            <p className="boleto__instruccion">
+              Muestra este código en la entrada. Es válido para una sola persona. Firma de verificación: <code>{boleto.firma}</code>
+            </p>
+            <a className="boleto__verificar boleto__no-imprimir" href={enlaceVerificacion(boleto)} target="_blank" rel="noreferrer">
+              Probar la verificación (se abre en otra pestaña)
+            </a>
           </div>
         </div>
       </article>

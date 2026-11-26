@@ -115,3 +115,10 @@
     box-shadow: none;
   }
 }
+
+.boleto__verificar {
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--secundario);
+  text-decoration: underline;
+}

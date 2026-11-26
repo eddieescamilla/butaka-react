@@ -1,73 +1,48 @@
-// DUEÑO: Gabriel. Módulo 6: boletos electrónicos. Código QR SIMULADO.
-// Dibuja un patrón con apariencia de QR que siempre es el mismo para el
-// mismo código de boleto (se calcula a partir del texto). No es un QR
-// escaneable real: para eso haría falta una librería, y esta entrega
-// no usa backend ni validación real de boletos.
+// DUEÑO: Gabriel. Módulo 6: boletos electrónicos. Código QR real, generado
+// en el cliente con la librería qrcode (sin servidor) y dibujado como SVG.
+// Se puede escanear con la cámara de cualquier teléfono.
 // Props:
-//   codigo: texto del boleto (por ejemplo "BTK-1001-01")
-//   tamano: ancho en píxeles (por defecto 180)
+//   valor:    texto que codifica el QR (el enlace de verificación del boleto)
+//   etiqueta: texto alternativo para lectores de pantalla
+//   tamano:   ancho en píxeles (por defecto 180)
 import { useMemo } from 'react';
+import QRCode from 'qrcode';
 import './CodigoQR.css';
 
-const MODULOS = 25;
+const MARGEN = 2; // zona blanca alrededor, en módulos
 
-// Número pseudoaleatorio repetible a partir del texto (algoritmo mulberry32)
-function generador(texto) {
-  let semilla = 0;
-  for (const caracter of texto) semilla = (Math.imul(semilla, 31) + caracter.charCodeAt(0)) | 0;
-  return () => {
-    semilla = (semilla + 0x6d2b79f5) | 0;
-    let t = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-// Las tres esquinas con cuadros de posición, como en un QR real
-function esZonaDePosicion(fila, columna) {
-  const enEsquina = (f, c) => f >= 0 && f < 8 && c >= 0 && c < 8;
-  return enEsquina(fila, columna) || enEsquina(fila, columna - (MODULOS - 8)) || enEsquina(fila - (MODULOS - 8), columna);
-}
-
-export default function CodigoQR({ codigo, tamano = 180 }) {
-  const celdas = useMemo(() => {
-    const aleatorio = generador(codigo);
-    const lista = [];
-    for (let fila = 0; fila < MODULOS; fila += 1) {
-      for (let columna = 0; columna < MODULOS; columna += 1) {
-        if (!esZonaDePosicion(fila, columna) && aleatorio() > 0.5) lista.push([fila, columna]);
+export default function CodigoQR({ valor, etiqueta, tamano = 180 }) {
+  // Matriz de módulos del QR (nivel de corrección M: tolera ~15 % de daño)
+  const { ancho, trazo } = useMemo(() => {
+    const { modules } = QRCode.create(valor, { errorCorrectionLevel: 'M' });
+    let camino = '';
+    for (let fila = 0; fila < modules.size; fila += 1) {
+      for (let columna = 0; columna < modules.size; columna += 1) {
+        if (modules.get(fila, columna)) camino += `M${columna} ${fila}h1v1h-1z`;
       }
     }
-    return lista;
-  }, [codigo]);
-
-  const posiciones = [
-    [0, 0],
-    [0, MODULOS - 7],
-    [MODULOS - 7, 0],
-  ];
+    return { ancho: modules.size, trazo: camino };
+  }, [valor]);
 
   return (
     <svg
       className="codigo-qr"
-      viewBox={`-2 -2 ${MODULOS + 4} ${MODULOS + 4}`}
+      viewBox={`${-MARGEN} ${-MARGEN} ${ancho + MARGEN * 2} ${ancho + MARGEN * 2}`}
       width={tamano}
       height={tamano}
       role="img"
-      aria-label={`Código QR del boleto ${codigo}`}
+      aria-label={etiqueta}
       shapeRendering="crispEdges"
     >
-      <rect x="-2" y="-2" width={MODULOS + 4} height={MODULOS + 4} fill="#FFFFFF" />
-      {celdas.map(([fila, columna]) => (
-        <rect key={`${fila}-${columna}`} x={columna} y={fila} width="1" height="1" fill="#1E1433" />
-      ))}
-      {posiciones.map(([fila, columna]) => (
-        <g key={`${fila}-${columna}`}>
-          <rect x={columna} y={fila} width="7" height="7" fill="#1E1433" />
-          <rect x={columna + 1} y={fila + 1} width="5" height="5" fill="#FFFFFF" />
-          <rect x={columna + 2} y={fila + 2} width="3" height="3" fill="#1E1433" />
-        </g>
-      ))}
+      <rect x={-MARGEN} y={-MARGEN} width={ancho + MARGEN * 2} height={ancho + MARGEN * 2} fill="#FFFFFF" />
+      <path d={trazo} fill="#1E1433" />
     </svg>
   );
+}
+
+// Enlace que codifica el QR: abre la pantalla de verificación de Butaka
+// con el código y su firma. Ejemplo:
+//   https://eddieescamilla.github.io/butaka-react/verificar/BTK-1001-01?f=0K3J9QX
+export function enlaceVerificacion(boleto) {
+  return `${window.location.origin}${import.meta.env.BASE_URL}verificar/${boleto.codigo}?f=${boleto.firma}`;
 }

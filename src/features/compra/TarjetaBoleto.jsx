@@ -4,7 +4,7 @@
 import EnlaceVista from '../../components/EnlaceVista.jsx';
 import Etiqueta from '../../components/Etiqueta.jsx';
 import { formatearFecha } from '../../utils/formato.js';
-import CodigoQR from './CodigoQR.jsx';
+import CodigoQR, { enlaceVerificacion } from './CodigoQR.jsx';
 import './TarjetaBoleto.css';
 
 export default function TarjetaBoleto({ boleto }) {
@@ -14,7 +14,7 @@ export default function TarjetaBoleto({ boleto }) {
   return (
     <article className={`tarjeta-boleto${pasado ? ' tarjeta-boleto--pasado' : ''}`}>
       <div className="tarjeta-boleto__qr" aria-hidden="true">
-        <CodigoQR codigo={boleto.codigo} tamano={72} />
+        <CodigoQR valor={enlaceVerificacion(boleto)} etiqueta={`Código QR del boleto ${boleto.codigo}`} tamano={72} />
       </div>
       <div className="tarjeta-boleto__info">
         {reembolsado ? (
