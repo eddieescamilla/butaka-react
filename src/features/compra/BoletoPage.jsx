@@ -1,31 +1,43 @@
 // DUEÑO: Gabriel. Módulo 6: boletos electrónicos. Un boleto con su código QR.
-// Props: { params, irA, sesion }  ·  params.codigo: código del boleto
+// Ruta: /boletos/:codigo (requiere sesión). El boleto viene de la API falsa.
+import { useParams } from 'react-router';
 import Boton from '../../components/Boton.jsx';
 import EnlaceVista from '../../components/EnlaceVista.jsx';
+import EstadoCarga from '../../components/EstadoCarga.jsx';
 import EstadoError from '../../components/EstadoError.jsx';
 import Logo from '../../components/Logo.jsx';
+import { usePeticion } from '../../hooks/usePeticion.js';
+import { obtenerBoleto } from '../../api/ordenes.js';
 import { formatearFecha, formatearPrecio } from '../../utils/formato.js';
+import { useSesion } from '../cuenta/useSesion.js';
 import CodigoQR from './CodigoQR.jsx';
-import { useOrdenes } from './useOrdenes.js';
 import './Compra.css';
 import './BoletoPage.css';
 
-export default function BoletoPage({ params, irA, sesion }) {
-  const { boletos } = useOrdenes(sesion.usuario.id);
-  const boleto = boletos.find((item) => item.codigo === params.codigo);
+export default function BoletoPage() {
+  const { codigo } = useParams();
+  const sesion = useSesion();
+  const { estado, datos: boleto, error, reintentar } = usePeticion(
+    (signal) => obtenerBoleto(codigo, { usuarioId: sesion.usuario.id }, { signal }),
+    [codigo, sesion.usuario.id],
+  );
 
   const volver = (
-    <EnlaceVista vista="mis-boletos" irA={irA} className="compra__volver boleto__no-imprimir">
+    <EnlaceVista a="/boletos" className="compra__volver boleto__no-imprimir">
       ← Volver a mis boletos
     </EnlaceVista>
   );
 
-  if (!boleto) {
+  if (estado !== 'exito') {
     return (
       <div className="contenedor compra">
         {volver}
         <h1 className="sr-only">Boleto</h1>
-        <EstadoError titulo="No encontramos este boleto" mensaje="Revisa que el código sea correcto o que pertenezca a tu cuenta." />
+        {estado === 'cargando' ? (
+          <EstadoCarga mensaje="Cargando tu boleto…" />
+        ) : (
+          <EstadoError titulo="No encontramos este boleto" mensaje={error} onReintentar={reintentar} />
+        )}
       </div>
     );
   }

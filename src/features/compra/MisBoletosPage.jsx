@@ -1,22 +1,26 @@
 // DUEÑO: Gabriel. Módulo 6: boletos electrónicos. Mis boletos.
-// Props: { irA, sesion }
+// Ruta: /boletos (requiere sesión). Las órdenes vienen de la API falsa.
 import { useMemo, useState } from 'react';
-import { usePeticion } from '../../hooks/usePeticion.js';
-import { simularPeticion } from '../../utils/simularPeticion.js';
+import { useNavigate } from 'react-router';
 import { formatearFechaCorta, formatearPrecio } from '../../utils/formato.js';
 import Boton from '../../components/Boton.jsx';
+import Etiqueta from '../../components/Etiqueta.jsx';
 import EstadoCarga from '../../components/EstadoCarga.jsx';
+import EstadoError from '../../components/EstadoError.jsx';
 import EstadoVacio from '../../components/EstadoVacio.jsx';
+import { useSesion } from '../cuenta/useSesion.js';
 import TarjetaBoleto from './TarjetaBoleto.jsx';
 import { useOrdenes } from './useOrdenes.js';
 import './Compra.css';
 import './MisBoletosPage.css';
 
-export default function MisBoletosPage({ irA, sesion }) {
-  const { ordenes } = useOrdenes(sesion.usuario.id);
+const ESTADOS_ORDEN = { pagada: 'Pagada', reembolsada: 'Reembolsada' };
+
+export default function MisBoletosPage() {
+  const { usuario } = useSesion();
+  const navegar = useNavigate();
+  const { estado, ordenes, error, reintentar } = useOrdenes(usuario.id);
   const [filtro, setFiltro] = useState('vigentes');
-  // Carga simulada, para mostrar el estado de carga
-  const { estado } = usePeticion((signal) => simularPeticion(() => true, { signal, retraso: 500 }), []);
 
   // Valor derivado: órdenes con al menos un boleto que cumple el filtro
   const visibles = useMemo(() => {
@@ -47,28 +51,31 @@ export default function MisBoletosPage({ irA, sesion }) {
 
       {estado === 'cargando' && <EstadoCarga mensaje="Cargando tus boletos…" />}
 
-      {estado !== 'cargando' && visibles.length === 0 && (
+      {estado === 'error' && <EstadoError titulo="No pudimos cargar tus boletos" mensaje={error} onReintentar={reintentar} />}
+
+      {estado === 'exito' && visibles.length === 0 && (
         <EstadoVacio
           titulo={filtro === 'vigentes' ? 'No tienes boletos vigentes' : 'No tienes boletos de eventos pasados'}
           mensaje={filtro === 'vigentes' ? 'Cuando compres boletos, aparecerán aquí con su código QR.' : undefined}
         >
-          {filtro === 'vigentes' && <Boton onClick={() => irA('inicio')}>Explorar eventos</Boton>}
+          {filtro === 'vigentes' && <Boton onClick={() => navegar('/eventos')}>Explorar eventos</Boton>}
         </EstadoVacio>
       )}
 
-      {estado !== 'cargando' &&
+      {estado === 'exito' &&
         visibles.map((orden) => (
           <section key={orden.id} className="mis-boletos__orden" aria-labelledby={`orden-${orden.id}`}>
             <h2 id={`orden-${orden.id}`} className="mis-boletos__orden-titulo">
               Orden {orden.id}
               <span>
-                {formatearFechaCorta(orden.fechaCompra)} · {formatearPrecio(orden.total)}
+                {formatearFechaCorta(orden.fechaCompra)} · {formatearPrecio(orden.total)} ·{' '}
+                <Etiqueta variante={orden.estado === 'pagada' ? 'en-venta' : 'cancelado'}>{ESTADOS_ORDEN[orden.estado]}</Etiqueta>
               </span>
             </h2>
             <ul className="mis-boletos__lista">
               {orden.boletos.map((boleto) => (
                 <li key={boleto.codigo}>
-                  <TarjetaBoleto boleto={boleto} irA={irA} />
+                  <TarjetaBoleto boleto={boleto} />
                 </li>
               ))}
             </ul>
