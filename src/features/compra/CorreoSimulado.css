@@ -1,0 +1,60 @@
+.correo-simulado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  padding: var(--espacio-3);
+  text-align: left;
+  background-color: var(--superficie);
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-tarjeta, 1rem);
+}
+
+.correo-simulado__aviso {
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  color: var(--secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.correo-simulado__cabecera {
+  display: grid;
+  gap: 0.25rem;
+  padding-bottom: var(--espacio-1);
+  font-size: var(--texto-sm);
+  color: var(--texto-secundario);
+  border-bottom: 1px solid var(--borde);
+}
+
+.correo-simulado__cabecera div {
+  display: flex;
+  gap: var(--espacio-1);
+}
+
+.correo-simulado__cabecera dt {
+  min-width: 3rem;
+  font-weight: 600;
+}
+
+.correo-simulado__asunto {
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-lg);
+}
+
+.correo-simulado__boletos {
+  display: grid;
+  gap: 0.25rem;
+  padding-left: var(--espacio-2);
+  font-size: var(--texto-sm);
+  list-style: disc;
+}
+
+.correo-simulado__enlace {
+  align-self: flex-start;
+  font-weight: 600;
+  color: var(--secundario);
+  text-decoration: underline;
+}

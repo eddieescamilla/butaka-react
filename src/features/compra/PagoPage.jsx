@@ -1,31 +1,37 @@
-// DUEÑO: Gabriel. Módulo 5: sistema de pagos. Paso 3: pago.
-// Props: { irA, sesion, carrito }
-// Prevención de doble compra: el botón se deshabilita mientras se procesa y
-// una referencia bloquea un segundo envío aunque llegue antes del render.
+// DUEÑO: Gabriel. Módulo 5: sistema de pagos. Paso 3: pago simulado.
+// Ruta: /checkout/pago (requiere sesión).
+// Flujo: pasarela simulada → la API crea la orden (recalcula montos, revisa y
+// descuenta inventario, genera los boletos) → se vacía el carrito → resultado.
+// Prevención de doble envío: el botón se deshabilita mientras se procesa y una
+// referencia bloquea un segundo envío aunque llegue antes del siguiente render.
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import Boton from '../../components/Boton.jsx';
 import EstadoVacio from '../../components/EstadoVacio.jsx';
 import EnlaceVista from '../../components/EnlaceVista.jsx';
+import { crearOrden } from '../../api/ordenes.js';
+import { useSesion } from '../cuenta/useSesion.js';
 import IndicadorPasos from './IndicadorPasos.jsx';
 import ResumenCompra from './ResumenCompra.jsx';
 import FormularioPago from './FormularioPago.jsx';
 import { procesarPago, soloDigitos } from './pagos.js';
-import { problemasDeStock } from './stock.js';
-import { useOrdenes } from './useOrdenes.js';
+import { useCarrito } from './useCarrito.js';
 import './Compra.css';
 
-export default function PagoPage({ irA, sesion, carrito }) {
-  const { crearOrden } = useOrdenes(sesion.usuario.id);
+export default function PagoPage() {
+  const carrito = useCarrito();
+  const { usuario } = useSesion();
+  const navegar = useNavigate();
   const [procesando, setProcesando] = useState(false);
   const enCurso = useRef(false);
 
-  if (carrito.items.length === 0) {
+  if (carrito.items.length === 0 && !procesando) {
     return (
       <div className="contenedor compra">
         <IndicadorPasos actual={3} />
         <h1 className="pagina__titulo">Pago</h1>
         <EstadoVacio titulo="No hay nada que pagar" mensaje="Tu carrito está vacío.">
-          <Boton onClick={() => irA('inicio')}>Ver eventos</Boton>
+          <Boton onClick={() => navegar('/eventos')}>Ver eventos</Boton>
         </EstadoVacio>
       </div>
     );
@@ -33,29 +39,29 @@ export default function PagoPage({ irA, sesion, carrito }) {
 
   async function pagar(tarjeta) {
     if (enCurso.current) return; // segundo clic ignorado
-    if (problemasDeStock(carrito.items).length > 0) {
-      irA('resumen');
-      return;
-    }
     enCurso.current = true;
     setProcesando(true);
     try {
+      // 1. Pasarela simulada (la tarjeta de prueba "rechazada" siempre falla)
       await procesarPago({ numero: tarjeta.numero, total: carrito.total });
-      const orden = crearOrden(carrito, {
-        titular: tarjeta.titular.trim(),
-        ultimos4: soloDigitos(tarjeta.numero).slice(-4),
+      // 2. La API crea la orden; nunca se guarda el número completo ni el CVV
+      const orden = await crearOrden({
+        usuarioId: usuario.id,
+        items: carrito.items,
+        tarjeta: { titular: tarjeta.titular.trim(), ultimos4: soloDigitos(tarjeta.numero).slice(-4) },
       });
       carrito.vaciar();
-      irA('resultado-pago', { resultado: 'aprobado', ordenId: orden.id });
+      // replace: el botón Atrás no regresa al formulario de un pago ya hecho
+      navegar('/checkout/resultado', { replace: true, state: { resultado: 'aprobado', ordenId: orden.id } });
     } catch (error) {
       // El carrito se conserva para poder intentar de nuevo
-      irA('resultado-pago', { resultado: 'rechazado', motivo: error.message });
+      navegar('/checkout/resultado', { state: { resultado: 'rechazado', motivo: error.message } });
     }
   }
 
   return (
     <div className="contenedor compra">
-      <EnlaceVista vista="resumen" irA={irA} className="compra__volver">
+      <EnlaceVista a="/checkout" className="compra__volver">
         ← Volver al resumen
       </EnlaceVista>
       <IndicadorPasos actual={3} />
