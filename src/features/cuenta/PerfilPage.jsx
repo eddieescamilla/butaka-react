@@ -1,21 +1,26 @@
 // DUEÑO: Gabriel. Módulo 1: gestión de usuarios. Perfil del usuario.
-// Props: { irA, sesion }
+// Ruta: /perfil (requiere sesión)
+// Los cambios se guardan en la API falsa y en la sesión global.
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import Aviso from '../../components/Aviso.jsx';
 import Boton from '../../components/Boton.jsx';
 import CampoTexto from '../../components/CampoTexto.jsx';
 import { ROLES } from '../../data/categorias.js';
-import { simularPeticion } from '../../utils/simularPeticion.js';
+import { actualizarUsuario as guardarPerfil } from '../../api/usuarios.js';
 import { validarPerfil } from './validaciones.js';
+import { useSesion } from './useSesion.js';
 import './Cuenta.css';
 import './PerfilPage.css';
 
-export default function PerfilPage({ irA, sesion }) {
+export default function PerfilPage() {
+  const sesion = useSesion();
+  const navegar = useNavigate();
   const { usuario } = sesion;
   const [valores, setValores] = useState({ nombre: usuario.nombre, apellido: usuario.apellido });
   const [errores, setErrores] = useState({});
   const [guardando, setGuardando] = useState(false);
-  const [aviso, setAviso] = useState('');
+  const [aviso, setAviso] = useState(null);
 
   const huboCambios = valores.nombre !== usuario.nombre || valores.apellido !== usuario.apellido;
 
@@ -33,15 +38,21 @@ export default function PerfilPage({ irA, sesion }) {
     if (Object.keys(encontrados).length > 0) return;
 
     setGuardando(true);
-    await simularPeticion(() => null, { retraso: 700 });
-    sesion.actualizarUsuario({ nombre: valores.nombre.trim(), apellido: valores.apellido.trim() });
-    setGuardando(false);
-    setAviso('Cambios guardados');
+    const cambios = { nombre: valores.nombre.trim(), apellido: valores.apellido.trim() };
+    try {
+      await guardarPerfil(usuario.id, cambios);
+      sesion.actualizarUsuario(cambios);
+      setAviso({ tipo: 'exito', mensaje: 'Cambios guardados' });
+    } catch (error) {
+      setAviso({ tipo: 'error', mensaje: error.message });
+    } finally {
+      setGuardando(false);
+    }
   }
 
   function cerrarSesion() {
     sesion.cerrarSesion();
-    irA('inicio');
+    navegar('/');
   }
 
   return (
@@ -64,7 +75,7 @@ export default function PerfilPage({ irA, sesion }) {
           <h2 id="perfil-datos" className="perfil__subtitulo">
             Datos personales
           </h2>
-          {aviso && <Aviso tipo="exito" mensaje={aviso} onCerrar={() => setAviso('')} />}
+          {aviso && <Aviso tipo={aviso.tipo} mensaje={aviso.mensaje} onCerrar={() => setAviso(null)} />}
           <form className="formulario-cuenta" onSubmit={alGuardar} noValidate>
             <div className="formulario-cuenta__fila">
               <CampoTexto id="perfil-nombre" name="nombre" etiqueta="Nombre" autoComplete="given-name" required value={valores.nombre} onChange={cambiar} error={errores.nombre} />
@@ -87,11 +98,11 @@ export default function PerfilPage({ irA, sesion }) {
           <h2 id="perfil-accesos" className="perfil__subtitulo">
             Accesos rápidos
           </h2>
-          <Boton variante="secundario" bloque onClick={() => irA('mis-boletos')}>
+          <Boton variante="secundario" bloque onClick={() => navegar('/boletos')}>
             Ver mis boletos
           </Boton>
           {sesion.esAdmin && (
-            <Boton variante="secundario" bloque onClick={() => irA('admin-dashboard')}>
+            <Boton variante="secundario" bloque onClick={() => navegar('/admin')}>
               Ir al panel de administración
             </Boton>
           )}

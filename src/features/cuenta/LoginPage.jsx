@@ -1,25 +1,38 @@
 // DUEÑO: Gabriel. Módulo 1: autenticación. Inicio de sesión.
-// Props: { params, irA, sesion }
-// Si App.jsx mandó aquí al usuario porque la vista pedía sesión,
-// params.volverA y params.volverParams dicen a dónde regresar.
+// Ruta: /login
+// Si RutaProtegida mandó aquí al usuario, location.state.desde dice a qué
+// ruta regresar después de iniciar sesión (por ejemplo /checkout/pago).
 import { useRef, useState } from 'react';
+import { Navigate, useLocation } from 'react-router';
 import Aviso from '../../components/Aviso.jsx';
 import Boton from '../../components/Boton.jsx';
 import CampoTexto from '../../components/CampoTexto.jsx';
 import EnlaceVista from '../../components/EnlaceVista.jsx';
-import { CONTRASENA_DEMO } from '../../data/usuarios.js';
+import { autenticar, CONTRASENA_DEMO } from '../../api/usuarios.js';
 import TarjetaAuth from './TarjetaAuth.jsx';
 import CampoContrasena from './CampoContrasena.jsx';
-import { autenticar } from './autenticacion.js';
+import { useSesion } from './useSesion.js';
 import { validarLogin } from './validaciones.js';
 import './Cuenta.css';
 
-export default function LoginPage({ params, irA, sesion }) {
-  const [valores, setValores] = useState({ correo: params.correo ?? '', contrasena: '' });
+// Ruta a la que se vuelve después de iniciar sesión
+export function rutaDeRegreso(estado, usuario) {
+  const desde = estado?.desde;
+  if (desde?.pathname) return `${desde.pathname}${desde.search ?? ''}`;
+  return usuario?.rol === 'admin' || usuario?.rol === 'organizador' ? '/admin' : '/';
+}
+
+export default function LoginPage() {
+  const sesion = useSesion();
+  const { state: estado } = useLocation();
+  const [valores, setValores] = useState({ correo: estado?.correo ?? '', contrasena: '' });
   const [errores, setErrores] = useState({});
   const [errorGeneral, setErrorGeneral] = useState('');
   const [enviando, setEnviando] = useState(false);
   const formulario = useRef(null);
+
+  // Con sesión iniciada, se regresa a la ruta pedida (o al panel / inicio)
+  if (sesion.haySesion) return <Navigate to={rutaDeRegreso(estado, sesion.usuario)} replace />;
 
   function cambiar(evento) {
     const siguientes = { ...valores, [evento.target.name]: evento.target.value };
@@ -41,9 +54,7 @@ export default function LoginPage({ params, irA, sesion }) {
     setEnviando(true);
     try {
       const usuario = await autenticar(valores.correo, valores.contrasena);
-      sesion.iniciarSesion(usuario);
-      const vaAlPanel = usuario.rol === 'admin' || usuario.rol === 'organizador';
-      irA(params.volverA ?? (vaAlPanel ? 'admin-dashboard' : 'inicio'), params.volverParams);
+      sesion.iniciarSesion(usuario); // el siguiente render redirige con <Navigate>
     } catch (error) {
       setErrorGeneral(error.message);
       setEnviando(false);
@@ -53,11 +64,11 @@ export default function LoginPage({ params, irA, sesion }) {
   return (
     <TarjetaAuth
       titulo="Inicia sesión"
-      subtitulo={params.volverA ? 'Inicia sesión para continuar con tu compra.' : 'Accede a tus boletos y compras.'}
+      subtitulo={estado?.desde ? 'Inicia sesión para continuar donde te quedaste.' : 'Accede a tus boletos y compras.'}
       pie={
         <p>
           ¿No tienes cuenta?{' '}
-          <EnlaceVista vista="registro" irA={irA} params={{ volverA: params.volverA, volverParams: params.volverParams }}>
+          <EnlaceVista a="/registro" estado={{ desde: estado?.desde }}>
             Crea una cuenta
           </EnlaceVista>
         </p>
@@ -87,7 +98,7 @@ export default function LoginPage({ params, irA, sesion }) {
           onChange={cambiar}
           error={errores.contrasena}
         />
-        <EnlaceVista vista="recuperar" irA={irA} className="formulario-cuenta__enlace">
+        <EnlaceVista a="/recuperar" className="formulario-cuenta__enlace">
           ¿Olvidaste tu contraseña?
         </EnlaceVista>
         <Boton type="submit" bloque cargando={enviando}>
