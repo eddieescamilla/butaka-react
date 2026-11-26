@@ -1,8 +1,9 @@
 // DUEÑO: Gabriel. Módulo 4: proceso de compra. Paso 1: zona y cantidad.
-// Props: { params, irA, carrito }  ·  params.eventoId llega desde el detalle (Eddie)
+// Ruta: /eventos/:id/boletos  ·  se llega desde "Comprar boletos" en el detalle (Eddie)
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { usePeticion } from '../../hooks/usePeticion.js';
-import { obtenerEventoPorId } from '../../servicios/eventos.js';
+import { obtenerEvento } from '../../api/eventos.js';
 import { MAXIMO_BOLETOS_POR_ZONA } from '../../data/categorias.js';
 import { disponiblesZona, sePuedeComprar } from '../../utils/eventos.js';
 import { formatearFecha, formatearPrecio, rutaPublica } from '../../utils/formato.js';
@@ -13,19 +14,20 @@ import EstadoError from '../../components/EstadoError.jsx';
 import IndicadorPasos from './IndicadorPasos.jsx';
 import SelectorZona from './SelectorZona.jsx';
 import SelectorCantidad from './SelectorCantidad.jsx';
+import { useCarrito } from './useCarrito.js';
 import './Compra.css';
 
-export default function SeleccionPage({ params, irA, carrito }) {
-  const { estado, datos: evento, error, reintentar } = usePeticion(
-    (signal) => obtenerEventoPorId(params.eventoId, { signal }),
-    [params.eventoId],
-  );
+export default function SeleccionPage() {
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const carrito = useCarrito();
+  const { estado, datos: evento, error, reintentar } = usePeticion((signal) => obtenerEvento(id, { signal }), [id]);
   const [zonaId, setZonaId] = useState('');
   const [cantidad, setCantidad] = useState(1);
 
   const encabezado = (
     <>
-      <EnlaceVista vista="detalle-evento" params={{ eventoId: params.eventoId }} irA={irA} className="compra__volver">
+      <EnlaceVista a={`/eventos/${id}`} className="compra__volver">
         ← Volver al evento
       </EnlaceVista>
       <IndicadorPasos actual={1} />
@@ -83,7 +85,7 @@ export default function SeleccionPage({ params, irA, carrito }) {
       precio: zona.precio,
       cantidad,
     });
-    irA('carrito');
+    navegar('/carrito');
   }
 
   return (
@@ -145,7 +147,7 @@ export default function SeleccionPage({ params, irA, carrito }) {
             Agregar al carrito
           </Boton>
           {carrito.totalItems > 0 && (
-            <Boton variante="secundario" bloque onClick={() => irA('carrito')}>
+            <Boton variante="secundario" bloque onClick={() => navegar('/carrito')}>
               Ir al carrito ({carrito.totalItems})
             </Boton>
           )}

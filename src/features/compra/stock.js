@@ -1,12 +1,11 @@
-// DUEÑO: Gabriel. Revisa que los boletos del carrito sigan disponibles
-// antes de pagar (otro comprador o el panel pudo cambiar el inventario).
-
-import { catalogoEventos } from '../../servicios/eventos.js';
+// DUEÑO: Gabriel. Revisa que los boletos del carrito sigan disponibles antes
+// de pagar (otro comprador o el panel pudo cambiar el inventario).
+// La API vuelve a revisarlo al crear la orden, pero así el usuario se entera antes.
 import { disponiblesZona, sePuedeComprar } from '../../utils/eventos.js';
 
+// items: carrito.items · eventos: lista de la API (listarEventos)
 // Devuelve una lista de mensajes; vacía = todo disponible
-export function problemasDeStock(items) {
-  const eventos = catalogoEventos();
+export function problemasDeStock(items, eventos) {
   return items.flatMap((item) => {
     const evento = eventos.find((e) => e.id === item.eventoId);
     const zona = evento?.zonas.find((z) => z.id === item.zonaId);
