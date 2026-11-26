@@ -1,16 +1,24 @@
 // DUEÑO: Gabriel. Módulo 1: autenticación. Recuperar contraseña (simulado).
-// Props: { irA }
+// Ruta: /recuperar
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import Boton from '../../components/Boton.jsx';
 import CampoTexto from '../../components/CampoTexto.jsx';
 import EnlaceVista from '../../components/EnlaceVista.jsx';
 import EstadoVacio from '../../components/EstadoVacio.jsx';
 import TarjetaAuth from './TarjetaAuth.jsx';
-import { solicitarRecuperacion } from './autenticacion.js';
+import { simularPeticion } from '../../utils/simularPeticion.js';
 import { PATRON_CORREO } from './validaciones.js';
 import './Cuenta.css';
 
-export default function RecuperarPage({ irA }) {
+// Siempre responde igual, exista o no el correo (no revela qué cuentas existen).
+// El envío del correo es simulado: no hay servidor de correo.
+function solicitarRecuperacion() {
+  return simularPeticion(() => true, { retraso: 900 });
+}
+
+export default function RecuperarPage() {
+  const navegar = useNavigate();
   const [correo, setCorreo] = useState('');
   const [error, setError] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -32,7 +40,7 @@ export default function RecuperarPage({ irA }) {
   }
 
   const pie = (
-    <EnlaceVista vista="login" irA={irA}>
+    <EnlaceVista a="/login">
       ← Volver a iniciar sesión
     </EnlaceVista>
   );
@@ -45,7 +53,7 @@ export default function RecuperarPage({ irA }) {
             titulo="Te enviamos las instrucciones"
             mensaje={`Si ${correo.trim()} está registrado, recibirás un enlace para crear una nueva contraseña. Revisa también la carpeta de spam.`}
           >
-            <Boton onClick={() => irA('login', { correo: correo.trim() })}>Volver a iniciar sesión</Boton>
+            <Boton onClick={() => navegar('/login', { state: { correo: correo.trim() } })}>Volver a iniciar sesión</Boton>
           </EstadoVacio>
         </div>
       </TarjetaAuth>

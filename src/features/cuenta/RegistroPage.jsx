@@ -1,20 +1,26 @@
 // DUEÑO: Gabriel. Módulo 1: autenticación. Crear cuenta.
-// Props: { params, irA, sesion }
-// Al registrarse, la sesión se inicia sola y se regresa a la compra si venía de ahí.
+// Ruta: /registro
+// Al registrarse, la sesión se inicia sola y se regresa a la compra si venía de ahí
+// (location.state.desde, igual que en el login).
 import { useRef, useState } from 'react';
+import { Navigate, useLocation } from 'react-router';
 import Aviso from '../../components/Aviso.jsx';
 import Boton from '../../components/Boton.jsx';
 import CampoTexto from '../../components/CampoTexto.jsx';
 import EnlaceVista from '../../components/EnlaceVista.jsx';
 import TarjetaAuth from './TarjetaAuth.jsx';
 import CampoContrasena from './CampoContrasena.jsx';
-import { correoRegistrado, registrar } from './autenticacion.js';
+import { registrarCliente } from '../../api/usuarios.js';
 import { validarRegistro } from './validaciones.js';
+import { useSesion } from './useSesion.js';
+import { rutaDeRegreso } from './LoginPage.jsx';
 import './Cuenta.css';
 
 const INICIALES = { nombre: '', apellido: '', correo: '', contrasena: '', confirmacion: '', terminos: false };
 
-export default function RegistroPage({ params, irA, sesion }) {
+export default function RegistroPage() {
+  const sesion = useSesion();
+  const { state: estado } = useLocation();
   const [valores, setValores] = useState(INICIALES);
   const [errores, setErrores] = useState({});
   const [intentoEnviar, setIntentoEnviar] = useState(false);
@@ -22,18 +28,20 @@ export default function RegistroPage({ params, irA, sesion }) {
   const [enviando, setEnviando] = useState(false);
   const formulario = useRef(null);
 
+  if (sesion.haySesion) return <Navigate to={rutaDeRegreso(estado, sesion.usuario)} replace />;
+
   function cambiar(evento) {
     const { name, type, checked, value } = evento.target;
     const siguientes = { ...valores, [name]: type === 'checkbox' ? checked : value };
     setValores(siguientes);
-    if (intentoEnviar) setErrores(validarRegistro(siguientes, correoRegistrado));
+    if (intentoEnviar) setErrores(validarRegistro(siguientes));
   }
 
   async function alEnviar(evento) {
     evento.preventDefault();
     if (enviando) return;
     setIntentoEnviar(true);
-    const encontrados = validarRegistro(valores, correoRegistrado);
+    const encontrados = validarRegistro(valores);
     setErrores(encontrados);
     if (Object.keys(encontrados).length > 0) {
       requestAnimationFrame(() => formulario.current?.querySelector('[aria-invalid="true"]')?.focus());
@@ -43,16 +51,17 @@ export default function RegistroPage({ params, irA, sesion }) {
     setEnviando(true);
     setErrorGeneral('');
     try {
-      const usuario = await registrar({
+      const usuario = await registrarCliente({
         nombre: valores.nombre.trim(),
         apellido: valores.apellido.trim(),
         correo: valores.correo.trim().toLowerCase(),
         contrasena: valores.contrasena,
       });
-      sesion.iniciarSesion(usuario);
-      irA(params.volverA ?? 'inicio', params.volverParams);
+      sesion.iniciarSesion(usuario); // el siguiente render redirige con <Navigate>
     } catch (error) {
-      setErrorGeneral(error.message);
+      // 409: el correo ya existe → se marca en el campo correspondiente
+      if (error.estado === 409) setErrores((actuales) => ({ ...actuales, correo: `${error.message} Inicia sesión.` }));
+      else setErrorGeneral(error.message);
       setEnviando(false);
     }
   }
@@ -64,7 +73,7 @@ export default function RegistroPage({ params, irA, sesion }) {
       pie={
         <p>
           ¿Ya tienes cuenta?{' '}
-          <EnlaceVista vista="login" irA={irA} params={{ volverA: params.volverA, volverParams: params.volverParams }}>
+          <EnlaceVista a="/login" estado={{ desde: estado?.desde }}>
             Inicia sesión
           </EnlaceVista>
         </p>

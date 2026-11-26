@@ -18,12 +18,12 @@ export function validarContrasenaNueva(contrasena) {
   return '';
 }
 
-export function validarRegistro(valores, correoExiste) {
+// La API revisa si el correo ya existe (registrarCliente responde con un error 409)
+export function validarRegistro(valores) {
   const errores = {};
   if (valores.nombre.trim().length < 2) errores.nombre = 'Escribe tu nombre.';
   if (valores.apellido.trim().length < 2) errores.apellido = 'Escribe tus apellidos.';
   if (!PATRON_CORREO.test(valores.correo.trim())) errores.correo = 'Escribe un correo válido, por ejemplo ana@correo.com.';
-  else if (correoExiste(valores.correo)) errores.correo = 'Ya existe una cuenta con este correo. Inicia sesión.';
   const errorContrasena = validarContrasenaNueva(valores.contrasena);
   if (errorContrasena) errores.contrasena = errorContrasena;
   if (!valores.confirmacion) errores.confirmacion = 'Repite tu contraseña.';
